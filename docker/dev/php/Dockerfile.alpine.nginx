@@ -1,0 +1,139 @@
+ARG NODE_VERSION=20.12.2
+ARG PNPM_VERSION=8.11.0
+
+#################################### LARAVEL BASE #####################################
+
+FROM php:8.1-fpm-alpine as laravel-base
+
+LABEL maintainer="Diego Carlos"
+
+RUN apk update && \
+    apk add --no-cache \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    zip \
+    jpegoptim \
+    optipng \
+    pngquant \
+    gifsicle \
+    vim \
+    curl \
+    unzip \
+    nano \
+    libzip-dev
+
+# Instalar extensiones PHP
+RUN docker-php-ext-install pdo_mysql exif gd opcache zip
+
+#################################### LARAVEL BASE #####################################
+
+FROM composer:2.6.6 as composer
+
+WORKDIR /composer
+
+# COPY --from=composer:2.6.6 /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+# COPY ./composer.json ./composer.json
+# COPY ./composer.lock ./composer.lock
+# COPY ./artisan ./artisan
+# COPY ./bootstrap ./bootstrap
+# COPY ./app ./app
+# COPY ./config ./config
+# COPY ./routes ./routes
+COPY . .
+
+RUN composer install
+
+#################################### LARAVEL BASE #####################################
+
+FROM node:${NODE_VERSION}-alpine as base
+
+WORKDIR /app
+
+RUN --mount=type=cache,target=/root/.npm \
+	npm install -g pnpm@${PNPM_VERSION}
+
+##################################### NODE DEPS #####################################
+
+##################################### NODE DEPS #####################################
+FROM base as builder
+
+COPY --from=composer /composer/ .
+
+RUN --mount=type=bind,source=package.json,target=package.json \
+	--mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
+	--mount=type=cache,target=/root/.local/share/pnpm/store \
+	pnpm install --frozen-lockfile
+
+# COPY ./resources ./resources
+# COPY ./public ./public
+# COPY ./package.json ./package.json
+# COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
+# COPY ./vite.config.js ./vite.config.js
+# COPY --from=composer /composer/vendor /app/vendor
+
+RUN pnpm build
+
+##################################### NODE DEPS #####################################
+
+FROM laravel-base as dev
+
+WORKDIR /usr/share/nginx/html
+
+COPY --from=composer /composer/ .
+COPY --from=builder /app/public ./public
+
+RUN chown -R www-data:www-data /usr/share/nginx/html \
+    && chmod -R 755 /usr/share/nginx/html \
+    && chmod -R 755 /usr/share/nginx/html/storage \
+    && chmod -R 755 /usr/share/nginx/html/bootstrap/cache
+
+EXPOSE 9000
+
+
+# FROM php:7.4-fpm
+
+# # Instalar las dependencias necesarias, incluida la extensión GD
+# RUN apt-get update && apt-get install -y \
+#     zip \
+#     unzip \
+#     curl \
+#     locales \
+#     libzip-dev \
+#     libfreetype6-dev \
+#     jpegoptim optipng pngquant gifsicle \
+#     libjpeg62-turbo-dev \
+#     libpng-dev \
+#     nano \
+#     libmagickwand-dev \
+#     && docker-php-ext-configure gd --with-freetype --with-jpeg \
+#     && docker-php-ext-install -j$(nproc) gd
+
+# RUN pecl install imagick
+
+# RUN docker-php-ext-install exif gd zip pdo_mysql
+# RUN docker-php-ext-enable imagick
+
+# Instala Composer
+# COPY --from=composer:2.6.3 /usr/bin/composer /usr/bin/composer
+
+# Instalar composer
+# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# ENV COMPOSER_ALLOW_SUPERUSER 1
+
+# WORKDIR /var/www/html
+
+
+
+
+
+
+
+
+
+
+
+

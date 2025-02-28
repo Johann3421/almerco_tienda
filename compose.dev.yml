@@ -1,0 +1,40 @@
+services:
+  web:
+    container_name: grupoalmerco.com.pe.local
+    build:
+      context: .
+      dockerfile: ./docker/dev/Dockerfile.nginx
+    ports:
+      - 8000:80
+    volumes:
+      - ./docker/dev/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/dev/conf.d:/etc/nginx/conf.d
+      - ./:/var/www/html
+      - vendor_grupoalmerco_com_pe_local:/var/www/html/vendor
+    networks:
+      - network_grupo_almerco_com_pe_local
+    depends_on:
+      - db
+
+  db:
+    container_name: grupoalmerco.com.pe.db.local
+    image: mysql:8.0
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_grupoalmerco_com_pe_local:/var/lib/mysql
+    networks:
+      - network_grupo_almerco_com_pe_local
+
+networks:
+  network_grupo_almerco_com_pe_local:
+    driver: bridge
+
+volumes:
+  vendor_grupoalmerco_com_pe_local:
+  mysql_grupoalmerco_com_pe_local:

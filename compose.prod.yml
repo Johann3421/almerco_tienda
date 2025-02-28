@@ -1,0 +1,48 @@
+services:
+  web:
+    container_name: tienda_almerco_web
+    image: nginx:1.26.0
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/dev/nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - network_almerco_tv
+    depends_on:
+      - php
+  php:
+    container_name: tienda_almerco_php
+    build:
+      context: .
+      dockerfile: docker/dev/php/Dockerfile.nginx
+    restart: always
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - network_almerco_tv
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql-almerco-tienda
+    restart: always
+    hostname: ${DB_HOST}
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - db_almerco_tienda:/var/lib/mysql
+    networks:
+      - network_almerco_tv
+
+networks:
+  network_almerco_tv:
+    driver: bridge
+
+volumes:
+  db_almerco_tienda:

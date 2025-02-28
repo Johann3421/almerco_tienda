@@ -1,0 +1,25 @@
+# Ignorar archivos y directorios específicos
+node_modules/
+vendor/
+dist/
+logs/
+docker-compose.yml
+docker-compose.dev.yml
+docker-compose.prod.yml
+Dockerfile
+
+# Ignorar toda la carpeta docker
+docker/
+TiendaVirtualAlmerco/
+
+# Ignorar archivos con extensiones específicas
+*.log
+*.txt
+*.md
+
+# Ignorar archivos ocultos
+# .*
+
+# Ignorar archivos generados por el sistema operativo
+.DS_Store
+Thumbs.db
