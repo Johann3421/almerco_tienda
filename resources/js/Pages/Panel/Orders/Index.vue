@@ -380,12 +380,12 @@ const handleError = (error, errorMessage) => {
                     <div class="flex gap-4">
 
                         <v-text-field density="comfortable" v-model="order.customer_name" label="Nombre del Cliente (*)"
-                            color="primary" variant="outlined" required hint="Ejemplo: Jhon Doe"
+                            color="#0e7490" variant="outlined" required hint="Ejemplo: Jhon Doe"
                             :rules="[rules.required]">
                         </v-text-field>
 
                         <v-text-field density="comfortable" v-model="order.customer_email"
-                            label="Correo Electrónico (*)" color="primary" variant="outlined" required
+                            label="Correo Electrónico (*)" color="#0e7490" variant="outlined" required
                             hint="Ejemplo: jhondoe@gmail.com" :rules="[rules.required, rules.email]">
                         </v-text-field>
 
@@ -394,12 +394,12 @@ const handleError = (error, errorMessage) => {
                     <div class="flex gap-4">
 
                         <v-text-field density="comfortable" v-model="order.customer_phone" label="Teléfono (*)"
-                            color="primary" variant="outlined" required hint="Ejemplo: 1234567890"
+                            color="#0e7490" variant="outlined" required hint="Ejemplo: 1234567890"
                             :rules="[rules.required, rules.phone]">
                         </v-text-field>
 
                         <v-text-field density="comfortable" v-model="order.customer_address" label="Dirección (*)"
-                            color="primary" variant="outlined" required hint="Ejemplo: Calle 123"
+                            color="#0e7490" variant="outlined" required hint="Ejemplo: Calle 123"
                             :rules="[rules.required, rules.address]">
                         </v-text-field>
 
@@ -408,12 +408,12 @@ const handleError = (error, errorMessage) => {
                     <div class="flex gap-4">
                         <div class="flex-2">
                             <v-autocomplete dense v-model="order.customer_document_type" label="Tipo de Documento (*)"
-                                item-title="name" item-value="value" chips density="comfortable" color="primary"
+                                item-title="name" item-value="value" chips density="comfortable" color="#0e7490"
                                 variant="outlined" required :rules="[rules.required]"
                                 :items="[{ name: 'DNI', value: 1 }, { name: 'RUC', value: 2 }]">
 
                                 <template v-slot:chip="{ props, item }">
-                                    <v-chip v-bind="props" :text="item.raw.name" color="primary"></v-chip>
+                                    <v-chip v-bind="props" :text="item.raw.name" color="#0e7490"></v-chip>
                                 </template>
 
                                 <template v-slot:item="{ props, item }">
@@ -434,7 +434,7 @@ const handleError = (error, errorMessage) => {
                             <v-text-field density="comfortable" v-model="order.customer_document_number"
                                 :label="(order.customer_document_type === 1) ? 'Dni (*)' : 'Ruc (*)'" type="text"
                                 :rules="(order.customer_document_type === 1) ? [rules.required, rules.dni] : [rules.required, rules.ruc]"
-                                color="primary" variant="outlined" required hint="Ejemplo: 00099900"
+                                color="#0e7490" variant="outlined" required hint="Ejemplo: 00099900"
                                 :maxlength="(order.customer_document_type === 1) ? 8 : 11">
                             </v-text-field>
                         </div>
@@ -443,12 +443,12 @@ const handleError = (error, errorMessage) => {
                     <div class="flex gap-4">
 
                         <v-autocomplete dense v-model="order.order_status" label="Estado del Pedido (*)"
-                            item-title="name" item-value="value" chips density="comfortable" color="primary"
+                            item-title="name" item-value="value" chips density="comfortable" color="#0e7490"
                             variant="outlined" required :rules="[rules.required]"
                             :items="[{ name: 'Pendiente de Pago', value: 'Pendiente de Pago' }, { name: 'Pendiente de Entrega', value: 'Pendiente de Entrega' }, { name: 'Completado', value: 'Completado' }]">
 
                             <template v-slot:chip="{ props, item }">
-                                <v-chip v-bind="props" :text="item.raw.name" color="primary"></v-chip>
+                                <v-chip v-bind="props" :text="item.raw.name" color="#0e7490"></v-chip>
                             </template>
 
                             <template v-slot:item="{ props, item }">
@@ -469,18 +469,18 @@ const handleError = (error, errorMessage) => {
                             type="date" :disabled="(order.order_status !== 'Completado')"
                             :rules="(order.order_status === 'Completado') ? [rules.required] : []"
                             :model-value="(order.order_status === 'Completado') ? order.delivery_date : ''"
-                            color="primary" variant="outlined" required hint="Ejemplo: 2021-10-10">
+                            color="#0e7490" variant="outlined" required hint="Ejemplo: 2021-10-10">
 
                         </v-text-field>
 
                     </div>
 
-                    <v-textarea v-model="order.observation" label="Observación" color="primary" variant="outlined"
+                    <v-textarea v-model="order.observation" label="Observación" color="#0e7490" variant="outlined"
                         hint="Ejemplo: Falta el pago de manera presencial" rows="3" clearable density="comfortable"
                         counter maxlength="255" no-resize>
                     </v-textarea>
 
-                    <v-checkbox label="Activo" v-model="order.active" color="primary" :rules="[rules.boolean]">
+                    <v-checkbox label="Activo" v-model="order.active" color="#0e7490" :rules="[rules.boolean]">
 
                     </v-checkbox>
 
@@ -489,7 +489,7 @@ const handleError = (error, errorMessage) => {
                             Productos
                         </h2>
 
-                        <v-btn color="primary" density="comfortable" @click="orderStore.addItem">
+                        <v-btn color="#0e7490" density="comfortable" @click="orderStore.addItem">
                             <v-icon left>mdi-plus</v-icon>
                         </v-btn>
                     </div>
@@ -513,7 +513,7 @@ const handleError = (error, errorMessage) => {
                         Cancelar
                     </v-btn>
 
-                    <v-btn type="submit" color="primary" :loading="fetchLoader_form">
+                    <v-btn type="submit" color="#0e7490" :loading="fetchLoader_form">
                         Guardar
                     </v-btn>
                 </v-card-actions>
@@ -528,11 +528,11 @@ const handleError = (error, errorMessage) => {
                     <div class="flex gap-4">
 
                         <v-text-field density="comfortable" v-model="order.customer_name" label="Nombre del Cliente (*)"
-                            color="primary" variant="outlined" hint="Ejemplo: Jhon Doe" :rules="[rules.required]">
+                            color="#0e7490" variant="outlined" hint="Ejemplo: Jhon Doe" :rules="[rules.required]">
                         </v-text-field>
 
                         <v-text-field density="comfortable" v-model="order.customer_email"
-                            label="Correo Electrónico (*)" color="primary" variant="outlined"
+                            label="Correo Electrónico (*)" color="#0e7490" variant="outlined"
                             hint="Ejemplo: jhondoe@gmail.com" :rules="[rules.required, rules.email]">
                         </v-text-field>
 
@@ -541,12 +541,12 @@ const handleError = (error, errorMessage) => {
                     <div class="flex gap-4">
 
                         <v-text-field density="comfortable" v-model="order.customer_phone" label="Teléfono (*)"
-                            color="primary" variant="outlined" hint="Ejemplo: 1234567890"
+                            color="#0e7490" variant="outlined" hint="Ejemplo: 1234567890"
                             :rules="[rules.required, rules.phone]">
                         </v-text-field>
 
                         <v-text-field density="comfortable" v-model="order.customer_address" label="Dirección (*)"
-                            color="primary" variant="outlined" hint="Ejemplo: Calle 123"
+                            color="#0e7490" variant="outlined" hint="Ejemplo: Calle 123"
                             :rules="[rules.required, rules.address]">
                         </v-text-field>
 
@@ -555,12 +555,12 @@ const handleError = (error, errorMessage) => {
                     <div class="flex gap-4">
                         <div class="flex-2">
                             <v-autocomplete dense v-model="order.customer_document_type" label="Tipo de Documento (*)"
-                                item-title="name" item-value="value" chips density="comfortable" color="primary"
+                                item-title="name" item-value="value" chips density="comfortable" color="#0e7490"
                                 variant="outlined" :rules="[rules.required]"
                                 :items="[{ name: 'DNI', value: 1 }, { name: 'RUC', value: 2 }]">
 
                                 <template v-slot:chip="{ props, item }">
-                                    <v-chip v-bind="props" :text="item.raw.name" color="primary"></v-chip>
+                                    <v-chip v-bind="props" :text="item.raw.name" color="#0e7490"></v-chip>
                                 </template>
 
                                 <template v-slot:item="{ props, item }">
@@ -581,7 +581,7 @@ const handleError = (error, errorMessage) => {
                             <v-text-field density="comfortable" v-model="order.customer_document_number"
                                 :label="(order.customer_document_type === 1) ? 'Dni (*)' : 'Ruc (*)'" type="text"
                                 :rules="(order.customer_document_type === 1) ? [rules.required, rules.dni] : [rules.required, rules.ruc]"
-                                color="primary" variant="outlined" required hint="Ejemplo: 00099900"
+                                color="#0e7490" variant="outlined" required hint="Ejemplo: 00099900"
                                 :maxlength="(order.customer_document_type === 1) ? 8 : 11">
                             </v-text-field>
                         </div>
@@ -590,12 +590,12 @@ const handleError = (error, errorMessage) => {
                     <div class="flex gap-4">
 
                         <v-autocomplete dense v-model="order.order_status" label="Estado del Pedido (*)"
-                            item-title="name" item-value="value" chips density="comfortable" color="primary"
+                            item-title="name" item-value="value" chips density="comfortable" color="#0e7490"
                             variant="outlined" :rules="[rules.required]"
                             :items="[{ name: 'Pendiente de Pago', value: 'Pendiente de Pago' }, { name: 'Pendiente de Entrega', value: 'Pendiente de Entrega' }, { name: 'Completado', value: 'Completado' }]">
 
                             <template v-slot:chip="{ props, item }">
-                                <v-chip v-bind="props" :text="item.raw.name" color="primary"></v-chip>
+                                <v-chip v-bind="props" :text="item.raw.name" color="#0e7490"></v-chip>
                             </template>
 
                             <template v-slot:item="{ props, item }">
@@ -616,18 +616,18 @@ const handleError = (error, errorMessage) => {
                             type="date" :disabled="(order.order_status !== 'Completado')"
                             :rules="(order.order_status === 'Completado') ? [rules.required] : []"
                             :model-value="(order.order_status === 'Completado') ? order.delivery_date : ''"
-                            color="primary" variant="outlined" required hint="Ejemplo: 2021-10-10">
+                            color="#0e7490" variant="outlined" required hint="Ejemplo: 2021-10-10">
 
                         </v-text-field>
 
                     </div>
 
-                    <v-textarea v-model="order.observation" label="Observación" color="primary" variant="outlined"
+                    <v-textarea v-model="order.observation" label="Observación" color="#0e7490" variant="outlined"
                         hint="Ejemplo: Falta el pago de manera presencial" rows="3" clearable density="comfortable"
                         counter maxlength="255" no-resize>
                     </v-textarea>
 
-                    <v-checkbox label="Activo" v-model="order.active" color="primary" :rules="[rules.boolean]">
+                    <v-checkbox label="Activo" v-model="order.active" color="#0e7490" :rules="[rules.boolean]">
 
                     </v-checkbox>
 
@@ -636,7 +636,7 @@ const handleError = (error, errorMessage) => {
                             Productos
                         </h2>
 
-                        <v-btn color="primary" density="comfortable" @click="orderStore.addItem">
+                        <v-btn color="#0e7490" density="comfortable" @click="orderStore.addItem">
                             <v-icon left>mdi-plus</v-icon>
                         </v-btn>
                     </div>
@@ -659,7 +659,7 @@ const handleError = (error, errorMessage) => {
                         Cancelar
                     </v-btn>
 
-                    <v-btn color="primary" :loading="fetchLoader_form" type="submit">
+                    <v-btn color="#0e7490" :loading="fetchLoader_form" type="submit">
                         Actualizar
                     </v-btn>
                 </v-card-actions>
@@ -674,12 +674,12 @@ const handleError = (error, errorMessage) => {
                     <v-row>
                         <v-col cols="12">
                             <v-autocomplete dense v-model="order.order_status_update" label="Acciones (*)"
-                                item-title="name" item-value="value" chips density="comfortable" color="primary"
+                                item-title="name" item-value="value" chips density="comfortable" color="#0e7490"
                                 variant="outlined" required :rules="[rules.required]"
                                 :items="[{ name: 'Cancelar', value: 'Cancelado' }, { name: 'Reembolzar', value: 'Reembolsado' }]">
 
                                 <template v-slot:chip="{ props, item }">
-                                    <v-chip v-bind="props" :text="item.raw.name" color="primary"></v-chip>
+                                    <v-chip v-bind="props" :text="item.raw.name" color="#0e7490"></v-chip>
                                 </template>
 
                                 <template v-slot:item="{ props, item }">
@@ -704,7 +704,7 @@ const handleError = (error, errorMessage) => {
                         Cancelar
                     </v-btn>
 
-                    <v-btn color="primary" :loading="fetchLoader_form" type="submit">
+                    <v-btn color="#0e7490" :loading="fetchLoader_form" type="submit">
                         Guardar
                     </v-btn>
                 </v-card-actions>
@@ -728,7 +728,7 @@ const handleError = (error, errorMessage) => {
                                                 <h2 class="text-lg md:text-xl lg:text-xl text-gray-900">Pedidos</h2>
                                             </v-col>
                                             <v-col cols="12" md="6" class="text-right flex justify-end items-center">
-                                                <v-btn color="primary" @click="Modal('create_order')">
+                                                <v-btn color="#0e7490" @click="Modal('create_order')">
                                                     <v-icon left>mdi-plus</v-icon>
                                                     Agregar Pedido
                                                 </v-btn>
@@ -745,12 +745,12 @@ const handleError = (error, errorMessage) => {
                                     </template>
 
                                     <template v-slot:text>
-                                        <v-text-field v-model="search" label="Buscar Pedido" prepend-inner-icon="mdi-magnify" variant="outlined" hide-details single-line density="comfortable" color="primary" @input="debouncedSearch">
+                                        <v-text-field v-model="search" label="Buscar Pedido" prepend-inner-icon="mdi-magnify" variant="outlined" hide-details single-line density="comfortable" color="#0e7490" @input="debouncedSearch">
                                         </v-text-field>
 
                                         <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items="filteredOrders" :items-length="totalOrders" :loading="fetchLoader" :search="searchQuery" item-value="id" @update:options="loadOrders" loading-text="Cargando Pedidos" no-data-text="Actualmente no hay pedidos disponibles" items-per-page-text="Pedidos por página" show-expand>
                                             <template v-slot:loader="{ isActive }">
-                                                <v-progress-linear :active="isActive" color="primary" height="3" indeterminate>
+                                                <v-progress-linear :active="isActive" color="#0e7490" height="3" indeterminate>
                                                 </v-progress-linear>
                                             </template>
 
@@ -788,7 +788,7 @@ const handleError = (error, errorMessage) => {
                                                 </template>
 
                                                 <template v-else>
-                                                    <v-chip color="orange" label>
+                                                    <v-chip color="#0e7490" label>
                                                         {{ item.order_status }}
                                                     </v-chip>
                                                 </template>
