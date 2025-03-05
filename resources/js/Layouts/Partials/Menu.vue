@@ -44,6 +44,7 @@ const links = [
         icon: 'mdi-view-array',
         route: 'banners.index',
     },
+    
     // {
     //     title: 'Clientes',
     //     value: 'clients',
@@ -56,6 +57,7 @@ const links = [
         icon: 'mdi-cog-outline',
         route: 'settings.index',
     },
+    
     // {
     //     title: 'Administración',
     //     value: 'admin',

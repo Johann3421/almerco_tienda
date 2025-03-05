@@ -42,13 +42,22 @@ getDolarValue();
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <link rel="icon" :href="Favicon" type="image/png" sizes="16x16">
             <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <!-- Metadatos SEO globales -->
             <meta name="description" content="Somos una empresa especializada en el comercio de productos tecnológicos de las mejores marcas, ofreciendo garantía y un servicio de calidad.">
             <meta name="robots" content="index, follow, nocache">
+            <meta name="keywords" content="tecnología, productos tecnológicos, marcas, garantía, calidad, SEKAI TECH">
             <meta property="og:title" content="SEKAI TECH">
             <meta property="og:description" content="Somos una empresa especializada en el comercio de productos tecnológicos de las mejores marcas, ofreciendo garantía y un servicio de calidad.">
             <meta property="og:url" content="https://grupoalmerco.com.pe/">
             <meta property="og:site_name" content="SEKAI TECH">
             <meta property="og:locale" content="es">
+            <meta property="og:type" content="website">
+            <meta property="og:image" content="#"> <!-- Añade una imagen representativa de tu marca -->
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:title" content="SEKAI TECH">
+            <meta name="twitter:description" content="Somos una empresa especializada en el comercio de productos tecnológicos de las mejores marcas, ofreciendo garantía y un servicio de calidad.">
+            <meta name="twitter:image" content="#"> <!-- Añade una imagen representativa de tu marca -->
         </Head>
 
         <!-- TERMINO DEL NAV MOBIL -->

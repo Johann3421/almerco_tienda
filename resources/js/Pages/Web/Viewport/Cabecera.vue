@@ -175,7 +175,7 @@ onMounted(async () => {
             :class="{ 'top-12': settingsGlobal.getImagsupvalue, 'top-0': !settingsGlobal.getImagsupvalue }"
             id="fixedContent">
             <!-- Aplicar degradado vertical aquí -->
-            <div class="hidden lg:flex flex-col bg-gradient-to-b from-sky-900 to-sky-500 2xl:px-24">
+            <div class="hidden lg:flex flex-col bg-white 2xl:px-24"> <!-- Cambiado a fondo blanco -->
                 <div class="hidden lg:flex p-5 sm:items-center">
                     <div class="flex justify-between items-center w-full gap-10">
                         <!-- Logo -->
@@ -186,7 +186,8 @@ onMounted(async () => {
                         <div class="w-100 hidden lg:flex items-center relative rounded-full">
                             <v-text-field v-model="search" @input="updateSearch" @keyup.enter="handleEnter"
                                 label="Buscar ProductoS" prepend-inner-icon="mdi-magnify" variant="outlined"
-                                hide-details single-line density="comfortable" class="bg-transparent text-white">
+                                hide-details single-line density="comfortable" class="bg-transparent text-black">
+                                <!-- Cambiado a texto negro -->
                             </v-text-field>
                             <!-- Popup de productos filtrados -->
                             <div v-if="showPopupProduct"
@@ -213,21 +214,24 @@ onMounted(async () => {
                         <div class="flex items-center">
                             <div class="flex flex-row items-center">
                                 <button @click="togglePopup" class="relative">
-                                    <i class="mdi mdi-cart text-4xl text-white p-2 rounded-xl m-2"></i>
-                                    <span class="absolute text-white -top-3 right-0 bg-sky-500 rounded-full px-2">{{
-                                        cantPedidos }}</span>
+                                    <i class="mdi mdi-cart text-4xl text-black p-2 rounded-xl m-2"></i>
+                                    <!-- Cambiado a texto negro -->
+                                    <span class="absolute text-black -top-3 right-0 bg-white rounded-full px-2">{{
+                                        cantPedidos }}</span> <!-- Cambiado a texto negro y fondo blanco -->
                                 </button>
-                                <span class="text-white pt-4"><span class="mx-1">S/.</span>{{
+                                <span class="text-black pt-4"><span class="mx-1">S/.</span>{{
                                     subtotalsoles.toLocaleString('en-US', {
                                         minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2 }) }}</span>
+                                        maximumFractionDigits: 2
+                                    }) }}</span> <!-- Cambiado a texto negro -->
                             </div>
                         </div>
                     </div>
                     <div class="mr-2">
                         <Nav />
                     </div>
-                    <div class="text-white text-center text-xs font-bold bg-sky-500 px-1 py-1 rounded-lg">
+                    <div class="text-black text-center text-xs font-bold bg-green-500 px-1 py-1 rounded-lg">
+                        <!-- Cambiado a fondo verde -->
                         <p class="w-20">T. Cambio <br>S/. {{ settingsGlobal.getDolarValue }}</p>
                     </div>
                 </div>
@@ -236,6 +240,7 @@ onMounted(async () => {
 
             <!-- Bloque gris (sin cambios) -->
             <div class="relative hidden lg:flex items-center w-screen bg-navegation gap-1 2xl:px-24">
+                <!-- Mantenido el fondo gris -->
                 <details :open="dropdownVisible" class="relative w-1/6 h-16 xl:px-4" @mouseover="dropdownVisible = true"
                     @mouseout="dropdownVisible = false">
                     <summary
@@ -266,7 +271,7 @@ onMounted(async () => {
                                             class="flex shrink-0 transition duration-100 justify-between w-full">
                                             <Link :href="route('categoryid', { slug: categoria.slug })"
                                                 class="block px-4 py-1 font-bold text-gray-800"><v-icon>{{
-                                                categoria.icon }}</v-icon> {{ categoria.name }}</Link>
+                                                    categoria.icon }}</v-icon> {{ categoria.name }}</Link>
                                         </span>
                                     </summary>
                                     <div

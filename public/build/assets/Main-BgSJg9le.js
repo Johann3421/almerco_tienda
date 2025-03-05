@@ -1,1 +1,0 @@
-import{_ as t}from"./Products-C03x9pgz.js";import{f as o,a as r,o as a}from"./app-Tg2vsIGN.js";import"./CartProductsMain-CO65E8hY.js";import"./PapupCarrito-DMOXKlem.js";import"./CartMobil-BH0CJ7l_.js";import"./PapupCant-ubNNp9Kj.js";import"./SettingStore-mPXLUNV3.js";const e={class:"mt-15"},d={__name:"Main",setup(m){return(s,_)=>(a(),o("main",e,[r(t)]))}};export{d as default};
