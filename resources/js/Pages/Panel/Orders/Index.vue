@@ -25,7 +25,7 @@ const fetchLoader = ref(false);
 const totalOrders = ref(0);
 const search = ref("");
 const searchQuery = ref("");
-const itemsPerPage = ref(2);
+const itemsPerPage = ref(10);
 const fetchLoader_form = ref(false);
 const showCanceledOrders = ref(false); // Controla si se muestran los pedidos cancelados
 
@@ -187,7 +187,11 @@ const storeOrder = async () => {
                 items: filteredItems
             };
 
-            const response = await axios.post(route('orders.store'), data);
+            const response = await axios.post(route('orders.store'), data, {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Asegura el envío del token CSRF
+                }
+            });
 
             if (response.status === 201) {
                 showAlert(true, response.data.message, "#D4E7C5", 2000);
@@ -233,7 +237,11 @@ const updateOrder = async () => {
 
         const response = await axios.patch(route('orders.updateOrder', {
             code: order.value.order_code
-        }), data);
+        }), data, {
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Asegura el envío del token CSRF
+            }
+        });
 
         if (response.status === 200) {
             showAlert(true, response.data.message, "#D4E7C5", 2000);
@@ -260,6 +268,10 @@ const deleteOrder = async () => {
                 code: order.value.order_code
             }), {
                 order_status: order.value.order_status_update
+            }, {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Asegura el envío del token CSRF
+                }
             });
 
             if (response.status === 200) {
