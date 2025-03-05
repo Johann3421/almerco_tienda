@@ -100,7 +100,7 @@ const closePopup = () => {
     obtenerCantidadPedidos();
 };
 
-const updateSearch = async () =>{
+const updateSearch = async () => {
     try {
         const response = await axios.get(`/filter-products-search?search=${search.value}`);
         // Actualizar la lista de productos filtrados
@@ -112,9 +112,9 @@ const updateSearch = async () =>{
         }
         // Mostrar el popup si hay resultados
         showPopupProduct.value = filteredProducts.value.length > 0;
-      } catch (error) {
+    } catch (error) {
         console.error('Error al buscar productos:', error);
-      }
+    }
 };
 
 const cargarImagenesProductos = (filteredProducts, filteredImages) => {
@@ -151,8 +151,8 @@ const handleEnter = async () => {
     const url = route('search-products', { s: search.value.toUpperCase() });
     window.location.href = url;
 };
-const hidePopupOnMouseLeave = () =>{
-      showPopupProduct.value = false;
+const hidePopupOnMouseLeave = () => {
+    showPopupProduct.value = false;
 };
 onMounted(async () => {
     await cargarcategories();
@@ -171,29 +171,37 @@ onMounted(async () => {
         <div class="block md:hidden" v-if="settingsGlobal.getImagsupmobilevalue">
             <Promotion :settingsbanner="settingsGlobal.getImagsupmobilevalue" />
         </div>
-        <div class="fixed z-10" :class="{ 'top-12': settingsGlobal.getImagsupvalue, 'top-0': !settingsGlobal.getImagsupvalue }" id="fixedContent">
-            <div class="hidden lg:flex flex-col bg-encabezado 2xl:px-24">
-                <div class="hidden lg:flex p-5 sm:items-center ">
+        <div class="fixed z-10"
+            :class="{ 'top-12': settingsGlobal.getImagsupvalue, 'top-0': !settingsGlobal.getImagsupvalue }"
+            id="fixedContent">
+            <!-- Aplicar degradado vertical aquí -->
+            <div class="hidden lg:flex flex-col bg-gradient-to-b from-sky-900 to-sky-500 2xl:px-24">
+                <div class="hidden lg:flex p-5 sm:items-center">
                     <div class="flex justify-between items-center w-full gap-10">
                         <!-- Logo -->
                         <Link class="flex cursor-pointer w-72 h-20 px-5" :href="route('web')">
-                        <img class="rounded-md w-full h-full"
-                        :src="Logo" alt="Logo">
+                        <img class="rounded-md w-full h-full" :src="Logo" alt="Logo">
                         </Link>
                         <!-- Buscador -->
                         <div class="w-100 hidden lg:flex items-center relative rounded-full">
-                            <v-text-field v-model="search" @input="updateSearch" @keyup.enter="handleEnter" label="Buscar Producto" prepend-inner-icon="mdi-magnify"
-                                variant="outlined" hide-details single-line density="comfortable" class="bg-encabezado text-white">
+                            <v-text-field v-model="search" @input="updateSearch" @keyup.enter="handleEnter"
+                                label="Buscar ProductoS" prepend-inner-icon="mdi-magnify" variant="outlined"
+                                hide-details single-line density="comfortable" class="bg-transparent text-white">
                             </v-text-field>
                             <!-- Popup de productos filtrados -->
-                            <div v-if="showPopupProduct" class="absolute z-10 w-auto bg-white rounded-md shadow-lg mt-1 top-full overflow-y-scroll" @mouseleave="hidePopupOnMouseLeave">
+                            <div v-if="showPopupProduct"
+                                class="absolute z-10 w-auto bg-white rounded-md shadow-lg mt-1 top-full overflow-y-scroll"
+                                @mouseleave="hidePopupOnMouseLeave">
                                 <ul>
-                                    <Link :href="route('productid', { slug: product.slug })" v-for="product in filteredProducts" :key="product.id" class="flex items-center gap-1 px-4 py-2 cursor-pointer hover:bg-fondoback">
-                                        <img :src="getRouteForProduct(product.id)" alt="Img" class=" h-12 w-12 rounded object-cover" />
-                                        <p class="flex flex-col text-sm">
-                                            <span>{{ product.name }}</span>
-                                            <span class="font-bold">Stock: {{ product.stock }}</span>
-                                        </p>
+                                    <Link :href="route('productid', { slug: product.slug })"
+                                        v-for="product in filteredProducts" :key="product.id"
+                                        class="flex items-center gap-1 px-4 py-2 cursor-pointer hover:bg-gray-100">
+                                    <img :src="getRouteForProduct(product.id)" alt="Img"
+                                        class="h-12 w-12 rounded object-cover" />
+                                    <p class="flex flex-col text-sm text-gray-800">
+                                        <span>{{ product.name }}</span>
+                                        <span class="font-bold">Stock: {{ product.stock }}</span>
+                                    </p>
                                     </Link>
                                 </ul>
                             </div>
@@ -201,36 +209,40 @@ onMounted(async () => {
                     </div>
 
                     <!-- Navegación para el carrito y redes sociales -->
-
                     <div class="px-4 hidden lg:flex items-center">
                         <div class="flex items-center">
-
-                            <div class="flex flex-row items-center ">
+                            <div class="flex flex-row items-center">
                                 <button @click="togglePopup" class="relative">
-                                    <i class="mdi mdi-cart text-4xl text-white  p-2 rounded-xl m-2"></i>
-                                    <span class="absolute text-white -top-3 right-0 bg-naranja rounded-full px-2">{{ cantPedidos }}</span>
+                                    <i class="mdi mdi-cart text-4xl text-white p-2 rounded-xl m-2"></i>
+                                    <span class="absolute text-white -top-3 right-0 bg-sky-500 rounded-full px-2">{{
+                                        cantPedidos }}</span>
                                 </button>
-
-                                <span class="text-white pt-4"><span class="mx-1">S/.</span>{{ subtotalsoles.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                                <span class="text-white pt-4"><span class="mx-1">S/.</span>{{
+                                    subtotalsoles.toLocaleString('en-US', {
+                                        minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2 }) }}</span>
                             </div>
-
                         </div>
                     </div>
                     <div class="mr-2">
                         <Nav />
                     </div>
-                    <div class="text-white text-center text-xs font-bold bg-greenhad px-1 py-1 rounded-lg">
+                    <div class="text-white text-center text-xs font-bold bg-sky-500 px-1 py-1 rounded-lg">
                         <p class="w-20">T. Cambio <br>S/. {{ settingsGlobal.getDolarValue }}</p>
                     </div>
                 </div>
                 <PapupCarrito v-if="showPopup" @close="closePopup" :images="images" />
             </div>
 
+            <!-- Bloque gris (sin cambios) -->
             <div class="relative hidden lg:flex items-center w-screen bg-navegation gap-1 2xl:px-24">
-                <details :open="dropdownVisible" class="relative w-1/6 h-16 xl:px-4" @mouseover="dropdownVisible = true" @mouseout="dropdownVisible = false">
-                    <summary :class="{'bg-naranja text-white': dropdownVisible,'hover:bg-naranja ': !dropdownVisible}"
+                <details :open="dropdownVisible" class="relative w-1/6 h-16 xl:px-4" @mouseover="dropdownVisible = true"
+                    @mouseout="dropdownVisible = false">
+                    <summary
+                        :class="{ 'bg-gradient-blue text-white': dropdownVisible, 'hover:bg-gradient-blue': !dropdownVisible }"
                         class="flex items-center justify-between px-4 text-white cursor-pointer 2xl:w-48 h-full">
-                        <span class="text-xs font-bold flex items-center"><i class="mdi mdi-menu text-lg mx-2"></i>CATEGORIAS</span>
+                        <span class="text-xs font-bold flex items-center"><i
+                                class="mdi mdi-menu text-lg mx-2"></i>CATEGORIAS</span>
                         <span class="shrink-0 group-open:-rotate-180">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
                                 fill="currentColor">
@@ -242,27 +254,39 @@ onMounted(async () => {
                     </summary>
                     <div class="absolute bg-white w-auto top-16">
                         <ul class="bg-white">
-                            <li v-for="(categoria, index) in categories" :key="index" @mouseover="categoria.dropdownVisibleSub = true" @mouseout="categoria.dropdownVisibleSub = false">
-                                <details :open="categoria.dropdownVisibleSub" class="group hover:bg-naranja hover:text-white relative">
-                                    <summary @click="toggleDropdownSub(categoria)" :class="{ 'bg-orange-400': categoria.dropdownVisibleSub, 'hover:bg-orange-400': !categoria.dropdownVisibleSub }" class="flex p-2 rounded cursor-pointer text-xs border-b w-52">
+                            <li v-for="(categoria, index) in categories" :key="index"
+                                @mouseover="categoria.dropdownVisibleSub = true"
+                                @mouseout="categoria.dropdownVisibleSub = false">
+                                <details :open="categoria.dropdownVisibleSub"
+                                    class="group hover:bg-gradient-blue hover:text-white relative">
+                                    <summary @click="toggleDropdownSub(categoria)"
+                                        :class="{ 'bg-sky-500': categoria.dropdownVisibleSub, 'hover:bg-sky-500': !categoria.dropdownVisibleSub }"
+                                        class="flex p-2 rounded cursor-pointer text-xs border-b w-52">
                                         <span :class="{ 'rotate-360': categoria.dropdownVisibleSub }"
                                             class="flex shrink-0 transition duration-100 justify-between w-full">
                                             <Link :href="route('categoryid', { slug: categoria.slug })"
-                                                class="block px-4 py-1 font-bold"><v-icon>{{ categoria.icon }}</v-icon> {{ categoria.name }}</Link>
+                                                class="block px-4 py-1 font-bold text-gray-800"><v-icon>{{
+                                                categoria.icon }}</v-icon> {{ categoria.name }}</Link>
                                         </span>
                                     </summary>
-                                    <div class="flex flex-wrap absolute bg-white top-0 left-56 w-lvw border-l border-orange-300 font-bold">
+                                    <div
+                                        class="flex flex-wrap absolute bg-white top-0 left-56 w-lvw border-l border-sky-300 font-bold">
                                         <div v-for="(group, subIndex) in groups" :key="subIndex" class="flex">
-                                            <div v-if="group.category_id===categoria.id" :open="group.dropdownVisibleSub" class="flex border-b">
-                                                <div @click="toggleDropdownSub(group)"  class="p-3 cursor-pointer text-xs">
-                                                    <Link  :href="route('groupid', { slug: group.slug })"
-                                                        class="py-2 font-bold text-orange-600">
-                                                        <v-icon>{{ group.icon }}</v-icon> {{ group.name }}
+                                            <div v-if="group.category_id === categoria.id"
+                                                :open="group.dropdownVisibleSub" class="flex border-b">
+                                                <div @click="toggleDropdownSub(group)"
+                                                    class="p-3 cursor-pointer text-xs">
+                                                    <Link :href="route('groupid', { slug: group.slug })"
+                                                        class="py-2 font-bold text-sky-500">
+                                                    <v-icon>{{ group.icon }}</v-icon> {{ group.name }}
                                                     </Link>
                                                     <ul class="w-full h-full overflow-y-auto">
-                                                        <li v-for="(subgroup, subsubIndex) in subgroups" :key="subsubIndex" class="">
-                                                            <Link v-if="subgroup.group_id===group.id" :href="route('subgroupid', { slug: subgroup.slug })" class="block py-2 text-xs hover:bg-orange-100 focus:ring focus:ring-orange-200 transition-all duration-300">
-                                                                <v-icon>{{ subgroup.icon }}</v-icon> {{ subgroup.name }}
+                                                        <li v-for="(subgroup, subsubIndex) in subgroups"
+                                                            :key="subsubIndex" class="">
+                                                            <Link v-if="subgroup.group_id === group.id"
+                                                                :href="route('subgroupid', { slug: subgroup.slug })"
+                                                                class="block py-2 text-xs hover:bg-sky-100 focus:ring focus:ring-sky-200 transition-all duration-300">
+                                                            <v-icon>{{ subgroup.icon }}</v-icon> {{ subgroup.name }}
                                                             </Link>
                                                         </li>
                                                     </ul>
@@ -278,26 +302,36 @@ onMounted(async () => {
 
                 <div class="relative pl-5 h-16 w-full" v-if="categories.length > 0">
                     <div class="flex items-center overflow-hidden w-full h-full">
-                        <div v-for="(categorianav, index) in categories" :key="index" id="grupoid" class="flex items-center overflow-hidden w-full">
-                            <details :open="categorianav.dropdownVisibleSubnav" @mouseover="showGroup(categorianav.id)" @mouseout="hideGroup(categorianav.id)" class="flex rounded hover:bg-naranja text-xs font-medium text-center transition-all duration-300 w-full">
-                                <summary class="flex items-center justify-center 2xl:py-5 transition-all duration-300 w-full">
-                                    <Link class="text-white px-2 2xl:px-4 flex items-center h-16 w-full" :href="route('categoryid', { slug: categorianav.slug })"><v-icon class="pr-0.5">{{ categorianav.icon }}</v-icon> {{ categorianav.name }}</Link>
+                        <div v-for="(categorianav, index) in categories" :key="index" id="grupoid"
+                            class="flex items-center overflow-hidden w-full">
+                            <details :open="categorianav.dropdownVisibleSubnav" @mouseover="showGroup(categorianav.id)"
+                                @mouseout="hideGroup(categorianav.id)"
+                                class="flex rounded hover:bg-gradient-blue text-xs font-medium text-center transition-all duration-300 w-full">
+                                <summary
+                                    class="flex items-center justify-center 2xl:py-5 transition-all duration-300 w-full">
+                                    <Link class="text-white px-2 2xl:px-4 flex items-center h-16 w-full"
+                                        :href="route('categoryid', { slug: categorianav.slug })"><v-icon
+                                        class="pr-0.5">{{ categorianav.icon }}</v-icon> {{ categorianav.name }}</Link>
                                 </summary>
                                 <div class="absolute w-full top-16 left-0 right-0 bg-white">
                                     <ul class="flex flex-wrap">
                                         <li v-for="(group, subIndex) in groups" :key="subIndex">
-                                            <div v-if="group.category_id===categorianav.id" :open="group.dropdownVisibleSubnav" class="group text-orange-500 text-center">
-                                                <div @click="toggleDropdownSub(group)" class="p-1 cursor-pointer transition-all duration-200 text-xs font-bold">
-                                                    <Link  :href="route('groupid', { slug: group.slug })"
+                                            <div v-if="group.category_id === categorianav.id"
+                                                :open="group.dropdownVisibleSubnav"
+                                                class="group text-sky-500 text-center">
+                                                <div @click="toggleDropdownSub(group)"
+                                                    class="p-1 cursor-pointer transition-all duration-200 text-xs font-bold">
+                                                    <Link :href="route('groupid', { slug: group.slug })"
                                                         class="block px-2 py-2">
-                                                        <v-icon>{{ group.icon }}</v-icon> {{ group.name }}
+                                                    <v-icon>{{ group.icon }}</v-icon> {{ group.name }}
                                                     </Link>
                                                 </div>
                                                 <ul class="bg-white">
                                                     <li v-for="(subgroup, subsubIndex) in subgroups" :key="subsubIndex">
-                                                        <Link v-if="subgroup.group_id===group.id" :href="route('subgroupid', { slug: subgroup.slug })"
-                                                            class="block px-2 py-2 text-xs  hover:bg-fondoback hover:text-orange-500 focus:ring focus:ring-orange-200 transition-all duration-300">
-                                                            <v-icon>{{ subgroup.icon }}</v-icon> {{ subgroup.name }}
+                                                        <Link v-if="subgroup.group_id === group.id"
+                                                            :href="route('subgroupid', { slug: subgroup.slug })"
+                                                            class="block px-2 py-2 text-xs hover:bg-sky-100 hover:text-sky-500 focus:ring focus:ring-sky-200 transition-all duration-300">
+                                                        <v-icon>{{ subgroup.icon }}</v-icon> {{ subgroup.name }}
                                                         </Link>
                                                     </li>
                                                 </ul>

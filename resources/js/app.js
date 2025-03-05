@@ -1,5 +1,6 @@
 import './bootstrap';
 import '../css/app.css';
+import axios from 'axios';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -9,6 +10,9 @@ import { createPinia } from 'pinia'
 import vuetify from './Plugins/Vuetify';
 
 const pinia = createPinia()
+
+axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

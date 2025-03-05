@@ -74,7 +74,7 @@ const openGroup = () => {
         <span class="v-list-item__underlay"></span>
 
         <div class="v-list-item__prepend">
-            <i :class="`${icon} mdi v-icon notranslate v-theme--light v-icon--size-default text-orange-darken-2`" aria-hidden="true"
+            <i :class="`${icon} mdi v-icon notranslate v-theme--light v-icon--size-default text-sky-500`" aria-hidden="true"
                 density="compact"></i>
             <div class="v-list-item__spacer"></div>
         </div>
@@ -95,7 +95,7 @@ const openGroup = () => {
                 <span class="v-list-item__underlay"></span>
 
                 <div class="v-list-item__prepend">
-                    <i :class="`${icon} mdi v-icon notranslate v-theme--light v-icon--size-default text-orange-darken-2`"
+                    <i :class="`${icon} mdi v-icon notranslate v-theme--light v-icon--size-default text-sky-500`"
                         aria-hidden="true" density="compact">
                     </i>
 
@@ -125,7 +125,7 @@ const openGroup = () => {
                 <span class="v-list-item__underlay"></span>
 
                 <div class="v-list-item__prepend">
-                    <i :class="`${icon} mdi v-icon notranslate v-theme--light v-icon--size-default text-orange-darken-2`"
+                    <i :class="`${icon} mdi v-icon notranslate v-theme--light v-icon--size-default text-sky-500`"
                         aria-hidden="true" density="compact">
                     </i>
 

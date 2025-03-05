@@ -50,5 +50,17 @@ class UserSeeder extends Seeder
 
         // Asignar el rol de administrador al usuario
         $user->assignRole($adminRole);
+
+        // Crear un usuario
+        $user1 = User::create([
+            'name' => 'Johann Abad',
+            'email' => '123@gmail.com',
+            'password' => Hash::make('12345678'),
+            'token' => Str::uuid(),
+            'active' => true,
+        ]);
+
+        // Asignar el rol de administrador al usuario
+        $user1->assignRole($adminRole);
     }
 }

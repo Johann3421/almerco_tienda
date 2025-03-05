@@ -149,13 +149,13 @@ import interbank from "@assets/img/extra/interbank.png";
         <a href="" class="w-32"><img :src="interbank" alt="Logo" /></a>
       </div>
       <p class="text-xs">
-        <span class="font-bold">GRUPO ALMERCO © 2024</span> - TODOS LOS DERECHOS
+        <span class="font-bold">SEKAI TECH © 2025</span> - TODOS LOS DERECHOS
         RESERVADOS
       </p>
     </div>
     <div class="hidden border-t border-white lg:flex justify-between text-white text-center items-center w-full p-2 lg:px-10 xl:px-32">
         <p class="text-xs lg:text-md xl:text-lg">
-          <span class="font-bold">GRUPO ALMERCO © 2024</span> - TODOS LOS DERECHOS
+          <span class="font-bold">SEKAI TECH © 2025</span> - TODOS LOS DERECHOS
           RESERVADOS
         </p>
         <div class="flex flex-col gap-2 sm:flex-row p-2 sm:gap-4 font-bold items-center">

@@ -90,7 +90,7 @@ cargarImagenesBrands();
 </script>
 
 <template>
-    <AppWebLayout title="Grupo Almerco" class="bg-fondoback" :categories="categories">
+    <AppWebLayout title="SEKAI TECH" class="bg-fondoback" :categories="categories">
         <Header @search-change="handleSearchChange" :categories="categories" :images="images" />
         <div class="lg:mt-44">
             <Banner :banners="banners" />

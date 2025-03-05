@@ -44,10 +44,10 @@ getDolarValue();
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <meta name="description" content="Somos una empresa especializada en el comercio de productos tecnológicos de las mejores marcas, ofreciendo garantía y un servicio de calidad.">
             <meta name="robots" content="index, follow, nocache">
-            <meta property="og:title" content="Grupo Almerco">
+            <meta property="og:title" content="SEKAI TECH">
             <meta property="og:description" content="Somos una empresa especializada en el comercio de productos tecnológicos de las mejores marcas, ofreciendo garantía y un servicio de calidad.">
             <meta property="og:url" content="https://grupoalmerco.com.pe/">
-            <meta property="og:site_name" content="Grupo Almerco">
+            <meta property="og:site_name" content="SEKAI TECH">
             <meta property="og:locale" content="es">
         </Head>
 
