@@ -400,7 +400,7 @@ const handleError = (error, errorMessage) => {
         <v-card prepend-icon="mdi-information" title="Especificaciones del Producto">
 
             <template v-slot:append>
-                <v-btn icon @click="addSpecification" color="primary">
+                <v-btn icon @click="addSpecification" color="#1e88e5">
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
             </template>
@@ -413,7 +413,7 @@ const handleError = (error, errorMessage) => {
                         label="Propiedad (*)"
                         type="text"
                         density="comfortable"
-                        color="primary"
+                        color="#1e88e5"
                         variant="outlined"
                         counter
                         persistent-hint
@@ -429,7 +429,7 @@ const handleError = (error, errorMessage) => {
                         label="Descripción (*)"
                         type="text"
                         density="comfortable"
-                        color="primary"
+                        color="#1e88e5"
                         variant="outlined"
                         counter
                         persistent-hint
@@ -461,7 +461,7 @@ const handleError = (error, errorMessage) => {
                     Cancelar
                 </v-btn>
 
-                <v-btn color="primary" type="submit" :loading="fetch_loader" :disabled="product.specifications.length === 0"
+                <v-btn color="#1e88e5" type="submit" :loading="fetch_loader" :disabled="product.specifications.length === 0"
                 @click="submitSpecifications">
                     Agregar Especificaciones
                 </v-btn>
@@ -493,7 +493,7 @@ const handleError = (error, errorMessage) => {
                                                         <v-col cols="12" md="6">
                                                             <v-text-field label="Nombre (*)" v-model="product.name"
                                                                 hint="Introduce el nombre del producto" required
-                                                                type="text" color="primary" variant="outlined"
+                                                                type="text" color="#1e88e5" variant="outlined"
                                                                 density="comfortable" :rules="[rules.required]"
                                                                 @input="genereateSlug">
                                                             </v-text-field>
@@ -503,7 +503,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-text-field label="Slug (*)" type="text"
                                                                 v-model="product.slug"
                                                                 hint="Introduce el slug del producto" required
-                                                                color="primary" variant="outlined" density="comfortable"
+                                                                color="#1e88e5" variant="outlined" density="comfortable"
                                                                 :rules="[rules.required, rules.slug]">
                                                             </v-text-field>
                                                         </v-col>
@@ -513,7 +513,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-text-field label="SKU (*)" type="text"
                                                                 v-model="product.sku" disabled
                                                                 hint="Introduce el SKU del producto" required
-                                                                color="primary" variant="outlined" density="comfortable"
+                                                                color="#1e88e5" variant="outlined" density="comfortable"
                                                                 :rules="[rules.required]">
                                                             </v-text-field>
                                                         </v-col>
@@ -522,7 +522,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-text-field label="Número de Parte (*)" type="text"
                                                                 v-model="product.part_number"
                                                                 hint="Introduce el número de parte del producto"
-                                                                required color="primary" variant="outlined"
+                                                                required color="#1e88e5" variant="outlined"
                                                                 density="comfortable" :rules="[rules.required]">
                                                             </v-text-field>
                                                         </v-col>
@@ -531,7 +531,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-text-field label="Stock (*)" type="number"
                                                                 v-model="product.stock"
                                                                 hint="Introduce el stock del producto" required
-                                                                color="primary" variant="outlined" density="comfortable"
+                                                                color="#1e88e5" variant="outlined" density="comfortable"
                                                                 :rules="[rules.number]">
                                                             </v-text-field>
                                                         </v-col>
@@ -541,7 +541,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-text-field label="Precio (*)" type="number"
                                                                 v-model="product.price"
                                                                 hint="Introduce el precio del producto" required
-                                                                color="primary" variant="outlined" density="comfortable"
+                                                                color="#1e88e5" variant="outlined" density="comfortable"
                                                                 :rules="[rules.required, rules.decimal]">
                                                             </v-text-field>
                                                         </v-col>
@@ -550,7 +550,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-text-field label="Precio Anterior" type="number"
                                                                 v-model="product.previous_price"
                                                                 hint="Introduce el precio anterior del producto"
-                                                                color="primary" variant="outlined" density="comfortable"
+                                                                color="#1e88e5" variant="outlined" density="comfortable"
                                                                 :rules="[rules.decimal]">
                                                             </v-text-field>
                                                         </v-col>
@@ -559,7 +559,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-text-field label="Descuento" type="number"
                                                                 v-model="product.discount" density="comfortable"
                                                                 hint="Introduce el descuento del producto"
-                                                                color="primary" variant="outlined"
+                                                                color="#1e88e5" variant="outlined"
                                                                 :rules="[rules.number]">
                                                             </v-text-field>
                                                         </v-col>
@@ -569,7 +569,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-textarea label="Descripción (*)" density="comfortable"
                                                                 type="text" v-model="product.description"
                                                                 hint="Introduce la descripción del producto" required
-                                                                variant="outlined" color="primary" auto-grow counter
+                                                                variant="outlined" color="#1e88e5" auto-grow counter
                                                                 :rules="[rules.required]">
                                                             </v-textarea>
                                                         </v-col>
@@ -578,7 +578,7 @@ const handleError = (error, errorMessage) => {
                                                         <v-col cols="12" md="12">
                                                             <v-text-field label="URL del Fabricante" type="text"
                                                                 density="comfortable" v-model="product.manufacturer_url"
-                                                                color="primary" variant="outlined"
+                                                                color="#1e88e5" variant="outlined"
                                                                 hint="Introduce la URL del fabricante"
                                                                 :rules="[rules.url]"
                                                                 >
@@ -586,14 +586,14 @@ const handleError = (error, errorMessage) => {
                                                         </v-col>
                                                     </v-row>
                                                     <v-row>
-                                                        <v-btn type="text" color="primary" variant="tonal"
+                                                        <v-btn type="text" color="#1e88e5" variant="tonal"
                                                             density="default" class="w-100 transform hover:scale-110"
                                                             @click.prevent="dialog_add_specifications = true; if (product.specifications.length === 0) addSpecification()">
                                                             Ver especificaciones del producto
                                                         </v-btn>
                                                     </v-row>
                                                     <span
-                                                        class="block w-full text-caption text-medium-emphasis text-right text-primary mt-4 px-4">
+                                                        class="block w-full text-caption text-medium-emphasis text-right text-[#1e88e5] mt-4 px-4">
                                                         (*) Campos obligatorios
                                                     </span>
                                                 </v-container>
@@ -608,7 +608,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-file-input v-model="product.image1" accept="image/*"
                                                                 variant="outlined" label="Imagen 1 (*)"
                                                                 @change="uploadImage($event, 1)" density="comfortable"
-                                                                color="primary" hide-details required>
+                                                                color="#1e88e5" hide-details required>
                                                             </v-file-input>
                                                         </v-col>
 
@@ -616,7 +616,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-file-input v-model="product.image2" accept="image/*"
                                                                 variant="outlined" label="Imagen 2 (*)"
                                                                 @change="uploadImage($event, 2)" density="comfortable"
-                                                                hide-details color="primary" required>
+                                                                hide-details color="#1e88e5" required>
                                                             </v-file-input>
                                                         </v-col>
 
@@ -624,7 +624,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-file-input v-model="product.image3" accept="image/*"
                                                                 variant="outlined" label="Imagen 3 (*)"
                                                                 @change="uploadImage($event, 3)" density="comfortable"
-                                                                hide-details color="primary" required>
+                                                                hide-details color="#1e88e5" required>
                                                             </v-file-input>
                                                         </v-col>
 
@@ -632,7 +632,7 @@ const handleError = (error, errorMessage) => {
                                                             <v-file-input v-model="product.image4" accept="image/*"
                                                                 variant="outlined" label="Imagen 4 (*)"
                                                                 @change="uploadImage($event, 4)" density="comfortable"
-                                                                hide-details color="primary" required>
+                                                                hide-details color="#1e88e5" required>
                                                             </v-file-input>
                                                         </v-col>
                                                     </v-row>
@@ -684,7 +684,7 @@ const handleError = (error, errorMessage) => {
                                                     </v-row>
 
                                                     <span
-                                                        class="block w-full text-caption text-medium-emphasis text-right text-primary mt-8 px-4">
+                                                        class="block w-full text-caption text-medium-emphasis text-right text-[#1e88e5] mt-8 px-4">
                                                         (*) Campos obligatorios
                                                     </span>
                                                 </v-container>
@@ -709,7 +709,7 @@ const handleError = (error, errorMessage) => {
                                                                     <div class="align-self-center pa-2">
                                                                         <v-switch hide-details
                                                                             v-model="product.on_promotion"
-                                                                            color="primary">
+                                                                            color="#1e88e5">
                                                                         </v-switch>
                                                                     </div>
                                                                 </v-sheet>
@@ -723,7 +723,7 @@ const handleError = (error, errorMessage) => {
                                                                     </div>
                                                                     <div class="align-self-center pa-2">
                                                                         <v-switch hide-details v-model="product.on_sale"
-                                                                            color="primary">
+                                                                            color="#1e88e5">
                                                                         </v-switch>
                                                                     </div>
                                                                 </v-sheet>
@@ -742,13 +742,13 @@ const handleError = (error, errorMessage) => {
                                                                         :items="categories" label="Sub Grupo (*)"
                                                                         item-title="name" item-value="id" chips multiple
                                                                         no-data-text="No se encontraron sub grupos"
-                                                                        closable-chips color="primary"
+                                                                        closable-chips color="#1e88e5"
                                                                         variant="outlined" density="comfortable"
                                                                         :rules="[rules.required, rules.array, rules.arrayNotEmpty]">
 
                                                                         <template v-slot:chip="{ props, item }">
                                                                             <v-chip v-bind="props" :text="item.raw.name"
-                                                                                color="primary"></v-chip>
+                                                                                color="#1e88e5"></v-chip>
                                                                         </template>
 
                                                                         <template v-slot:item="{ props, item }">
@@ -789,13 +789,13 @@ const handleError = (error, errorMessage) => {
                                                                         :items="filters" label="Filtros (*)"
                                                                         item-title="name" item-value="id" chips multiple
                                                                         no-data-text="No se encontraron Filtros"
-                                                                        closable-chips color="primary"
+                                                                        closable-chips color="#1e88e5"
                                                                         variant="outlined" density="comfortable"
                                                                         :rules="[rules.required, rules.array, rules.arrayNotEmpty]">
 
                                                                         <template v-slot:chip="{ props, item }">
                                                                             <v-chip v-bind="props" :text="item.raw.name"
-                                                                                color="primary"></v-chip>
+                                                                                color="#1e88e5"></v-chip>
                                                                         </template>
 
                                                                         <template v-slot:item="{ props, item }">
@@ -817,7 +817,7 @@ const handleError = (error, errorMessage) => {
                                                     </v-card-text>
                                                 </v-card>
 
-                                                <v-btn type="submit" color="primary" variant="tonal"
+                                                <v-btn type="submit" color="#1e88e5" variant="tonal"
                                                     :loading="fetch_loader_form" density="default"
                                                     class="w-100 transform hover:scale-110">
                                                     Actualizar Producto

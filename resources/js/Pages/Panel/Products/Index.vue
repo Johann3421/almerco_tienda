@@ -112,17 +112,22 @@ const destroyProduct = async () => {
     try {
         fetchLoader_form.value = true;
 
+        // Enviar la solicitud DELETE al backend
         const response = await axios.delete(route("products.destroy", product.value.id));
 
         if (response.status === 200) {
+            // Eliminar el producto de la lista local
             products.value = products.value.filter((p) => p.id !== product.value.id);
             showAlert(true, response.data.message, "#D4E7C5", 1000);
+        } else {
+            // Si la respuesta no es 200, mostrar un error
+            handleError(null, "No se pudo eliminar el producto. Inténtalo de nuevo.");
         }
     } catch (error) {
+        // Manejar errores de la solicitud
         handleError(error, "Ha ocurrido un error al eliminar el producto");
     } finally {
         fetchLoader_form.value = false;
-
         closeDelete();
     }
 };
@@ -232,7 +237,7 @@ const handleError = (error, errorMessage) => {
 
                 <v-spacer></v-spacer>
 
-                <v-btn color="primary" variant="tonal" @click="closeDelete"> Cancelar </v-btn>
+                <v-btn color="#1e88e5" variant="tonal" @click="closeDelete"> Cancelar </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -258,7 +263,7 @@ const handleError = (error, errorMessage) => {
                                             </v-col>
                                             <v-col cols="12" md="6" class="text-right flex justify-end items-center">
                                                 <Link :href="route('products.create')" type="button">
-                                                <v-btn color="primary">
+                                                <v-btn color="#1e88e5">
                                                     <v-icon left>mdi-plus</v-icon>
                                                     Agregar Producto
                                                 </v-btn>
@@ -270,7 +275,7 @@ const handleError = (error, errorMessage) => {
                                     <template v-slot:text>
                                         <v-text-field v-model="search" label="Buscar Producto"
                                             prepend-inner-icon="mdi-magnify" variant="outlined" hide-details single-line
-                                            density="comfortable" color="primary" @input="debouncedSearch">
+                                            density="comfortable" color="#1e88e5" @input="debouncedSearch">
                                         </v-text-field>
 
                                         <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers"
@@ -285,7 +290,7 @@ const handleError = (error, errorMessage) => {
                                             <template v-slot:loader="{ isActive }">
                                                 <v-progress-linear
                                                   :active="isActive"
-                                                  color="primary"
+                                                  color="#1e88e5"
                                                   height="3"
                                                   indeterminate
                                                 >
@@ -303,7 +308,7 @@ const handleError = (error, errorMessage) => {
                                             </template>
 
                                             <template v-slot:item.price="{ item }">
-                                                <v-chip color="primary" class="text-uppercase" label size="small">
+                                                <v-chip color="#1e88e5" class="text-uppercase" label size="small">
                                                   $ {{ item.price }}
                                                 </v-chip>
                                             </template>
@@ -311,7 +316,7 @@ const handleError = (error, errorMessage) => {
                                             <template v-slot:item.on_sale="{ item }">
                                                 <v-switch
                                                   v-model="item.on_sale"
-                                                  color="#0e7490"
+                                                  color="#1e88e5"
                                                   style="justify-content: center"
                                                   @change="updateVisibility(item.id, item.on_sale)"
                                                 >
@@ -335,7 +340,7 @@ const handleError = (error, errorMessage) => {
                                                   :href="route('products.edit', item.id)"
                                                   class="inline-block me-2 transition hover:scale-125"
                                                 >
-                                                  <v-icon size="small" class="me-2" color="primary">
+                                                  <v-icon size="small" class="me-2" color="#1e88e5">
                                                     mdi-pencil
                                                   </v-icon>
                                                 </Link>

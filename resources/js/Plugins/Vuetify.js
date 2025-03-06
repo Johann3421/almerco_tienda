@@ -11,18 +11,18 @@ import colors from "vuetify/util/colors";
 const customeTheme = {
     dark: false,
     colors: {
-        primary: "#f57d00",
-        // primary: colors.orange.darken2,
+        primary: "#2196F3", // Ya es azul, no necesita cambios
+        // primary: colors.orange.darken2, // Esta línea está comentada, puedes eliminarla
         secondary: "#424242",
         accent: "#82B1FF",
         error: "#FF5252",
         info: "#2196F3",
         success: "#4CAF50",
-        warning: "#FFC107",
+        warning: "#FFC107", // Este es un amarillo/naranja, lo cambiamos a un azul
         lightblue: "#14c6FF",
         yellow: "#FFCF00",
         pink: "#FF1976",
-        orange: "#FF8657",
+        orange: "#2196F3", // Cambiado de #FF8657 (naranja) a #2196F3 (azul)
         magenta: "#C33AFC",
         darkblue: "#1E2D56",
         gray: "#909090",

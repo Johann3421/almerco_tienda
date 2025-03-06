@@ -28,5 +28,14 @@ export default defineConfig({
     resolve: {
         alias: aliases,
     },
-
+    build: {
+        rollupOptions: {
+            output: {
+                format: 'iife', // Usar formato compatible con navegadores
+                entryFileNames: 'assets/[name]-[hash].js',
+                chunkFileNames: 'assets/[name]-[hash].js',
+                assetFileNames: 'assets/[name]-[hash].[ext]',
+            },
+        },
+    },
 });

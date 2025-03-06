@@ -232,7 +232,7 @@ onMounted(async () => {
                     </div>
                     <div class="text-black text-center text-xs font-bold bg-green-500 px-1 py-1 rounded-lg">
                         <!-- Cambiado a fondo verde -->
-                        <p class="w-20">T. Cambio <br>S/. {{ settingsGlobal.getDolarValue }}</p>
+                        <p class="w-20">T. Cambios <br>S/. {{ settingsGlobal.getDolarValue }}</p>
                     </div>
                 </div>
                 <PapupCarrito v-if="showPopup" @close="closePopup" :images="images" />

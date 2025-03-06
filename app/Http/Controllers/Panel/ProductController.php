@@ -304,12 +304,24 @@ class ProductController extends Controller
     }
 
     public function destroy(string $id)
-    {
-        $result = $this->productService->destroy($id);
-        if ($result) {
-            return response()->json(['message' => 'El producto ha sido eliminado'], 200);
-        } else {
-            return response()->json(['message' => 'No se ha podido eliminar el producto'], 500);
-        }
+{
+    try {
+        // Buscar el producto por ID
+        $product = Product::findOrFail($id);
+
+        // Eliminar el producto de la base de datos
+        $product->delete();
+
+        // Retornar una respuesta exitosa
+        return response()->json([
+            'message' => 'Producto eliminado correctamente.',
+        ], 200);
+    } catch (\Exception $e) {
+        // Retornar un error si algo falla
+        return response()->json([
+            'message' => 'Error al eliminar el producto.',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
 }
