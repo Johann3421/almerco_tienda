@@ -23,16 +23,25 @@ const filteredProducts = ref([]);
 const imagenesProducto = ref([]);
 const imagenesBrand = ref([]);
 const products = ref([]);
+const tamañoDelCart = 350;
+
+const handleSearchChange = (searchTerm) => {
+    filteredProducts.value = searchTerm;
+};
 
 const cargarProductos = () => {
-    products.value = props.subgroups.flatMap(subgroup => subgroup.products);
+    products.value = [];
+    props.subgroups.forEach(subgroup => {
+        products.value.push(...subgroup.products);
+    });
 };
 
 const productosPorFila = computed(() => {
-    return Math.floor(window.innerWidth / 350);
+    return Math.floor(window.innerWidth / tamañoDelCart);
 });
 
 const cargarImagenesProductos = () => {
+    imagenesProducto.value = [];
     if (props.images) {
         products.value.forEach(producto => {
             const imagenes = props.images.filter(imagen => imagen.product_id === producto.id);
@@ -42,6 +51,7 @@ const cargarImagenesProductos = () => {
 };
 
 const cargarImagenesBrands = () => {
+    imagenesBrand.value = [];
     if (props.brands) {
         props.brands.forEach(brand => {
             brand.filter_items.forEach(filterItem => {
@@ -58,6 +68,34 @@ const cargarImagenesBrands = () => {
         });
     }
 };
+
+const productGroups = computed(() => {
+    const groups = [];
+    for (let i = 0; i < products.value.length; i += productosPorFila.value) {
+        groups.push(products.value.slice(i, i + productosPorFila.value));
+    }
+    return groups;
+});
+
+watch(() => window.innerWidth, () => {
+    productosPorFila.value = Math.floor(window.innerWidth / tamañoDelCart);
+});
+
+const getImagenesProducto = (product_id) => {
+    const imagenes = imagenesProducto.value.find(item => item.product_id === product_id);
+    return imagenes ? imagenes.imagenes : [];
+};
+
+const getImagenesBrand = (product_id) => {
+    const brand = imagenesBrand.value.find(item => item.product_id === product_id);
+    return brand ? brand.imagen : null;
+};
+
+onMounted(() => {
+    cargarProductos();
+    cargarImagenesProductos();
+    cargarImagenesBrands();
+});
 
 const actualizarSEO = () => {
     nextTick(() => {
@@ -120,8 +158,10 @@ onMounted(() => {
             <img class="aspect-video w-full md:hidden" v-if="settingsGlobal.getImagmedmobilevalue" :src="`/storage/${settingsGlobal.getImagmedmobilevalue.file_path}/${settingsGlobal.getImagmedmobilevalue.file}`" alt="Imagen de móvil">
         </div>
         <SmallNav :categories="categories" nombreboton="OFERTAS" />
+        
+        <!-- Carrusel de Productos -->
         <div class="sm:px-10 2xl:px-20">
-            <v-carousel hide-delimiters style="height: 100%;">
+            <v-carousel v-if="productGroups.length > 0" hide-delimiters style="height: 100%;">
                 <v-carousel-item v-for="(productGroup, groupIndex) in productGroups" :key="groupIndex">
                     <div class="flex justify-center 2xl:px-5">
                         <template v-for="(product, productIndex) in productGroup" :key="productIndex">
@@ -131,10 +171,13 @@ onMounted(() => {
                     </div>
                 </v-carousel-item>
             </v-carousel>
+            <p v-else class="text-center text-gray-500">No hay productos disponibles.</p>
         </div>
+        
         <NavMobil :categories="categories" :images="images" />
     </AppWebLayout>
 </template>
+
 
 <style>
 /* Añade esto en tu archivo de estilos CSS */
