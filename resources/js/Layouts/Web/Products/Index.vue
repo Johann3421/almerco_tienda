@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3"; // Importa usePage
 import { ref, defineProps, onMounted, computed, watch } from "vue";
 import CartMain from "@/Pages/Web/Carts/CartProductsMain.vue";
 import PapupCarrito from '@/Pages/Web/Carrito/PapupCarrito.vue';
@@ -317,7 +317,16 @@ const closePopup = () => {
     obtenerCantidadPedidos();
 };
 
-// Inicialización al montar el componente
+// Función para actualizar el título de la página
+const updatePageTitle = () => {
+    setTimeout(() => {
+        const newTitle = `${nameproduct.value} - ${partNumber.value} | SEKAI TECH`;
+        document.title = newTitle;
+        console.log("Título actualizado:", newTitle);
+    }, 500); // Pequeño retraso para asegurarnos de que no se sobrescriba
+};
+
+// Llamar a updatePageTitle cuando el componente se monta
 onMounted(() => {
     products.value = props.products;
     maxQuantity.value = stock.value;
@@ -326,7 +335,9 @@ onMounted(() => {
     routeimage.value = props.images && props.images.length > 0 ? `/storage/${props.images[0].file_path}/${props.images[0].file}` : '';
     obtenerCantidadPedidos();
     cargarImagenesBrands();
+    updatePageTitle(); // Actualizar el título de la página
 });
+
 </script>
 
 <template>
@@ -356,7 +367,7 @@ onMounted(() => {
                             <v-carousel hide-delimiters style="height: 400px; width: 100%">
                                 <v-carousel-item v-for="(item, i) in items" :key="i">
                                     <div class="h-full px-10 py-7">
-                                        <img :src="item.src"
+                                        <img :src="item.src" :alt="`Imagen de ${nameproduct} - ${partNumber}`"
                                             class="w-full h-full object-contain hover:scale-105 zoom-effect"
                                             @click="showZoomedImage(item.src)" />
                                     </div>
@@ -367,7 +378,7 @@ onMounted(() => {
                             <v-carousel hide-delimiters style="height: 350px; width: 100%">
                                 <v-carousel-item v-for="(item, i) in items" :key="i">
                                     <div class="h-full p-5">
-                                        <img :src="item.src"
+                                        <img :src="item.src" :alt="`Imagen de ${nameproduct} - ${partNumber}`"
                                             class="w-full h-full object-contain hover:scale-105 zoom-effect"
                                             @click="showZoomedImage(item.src)" />
                                     </div>
@@ -376,7 +387,7 @@ onMounted(() => {
                         </div>
                         <div class="hidden md:flex justify-between p-5 h-1/4 overflow-x-auto">
                             <img class="p-1 border w-32 cursor-pointer rounded flex items-center transition-transform duration-300 transform-growth hover:scale-105"
-                                v-for="(item, i) in items" :key="i" :src="item.src" cover alt=""
+                                v-for="(item, i) in items" :key="i" :src="item.src" :alt="`Imagen de ${nameproduct} - ${partNumber}`"
                                 @click="showZoomedImage(item.src)" />
                         </div>
                     </div>
@@ -386,10 +397,8 @@ onMounted(() => {
                 </div>
                 <div class="flex flex-col lg:pl-5 gap-4 lg:w-1/2">
                     <div>
-                        <h1 class="text-2xl font-bold">{{ nameproduct }} - Alta Calidad y Durabilidad | [SEKAI TECH]
-                        </h1>
-                        <p class="text-left">{{ prodDescription }} - Compra ahora y disfruta de envío rápido y seguro.
-                        </p>
+                        <h1 class="text-2xl font-bold">{{ nameproduct }} - {{ partNumber }} | SEKAI TECH</h1>
+                        <p class="text-left">Número de parte: {{ partNumber }} - {{ prodDescription }}. Compra ahora y disfruta de envío rápido y seguro.</p>
                     </div>
                     <div>
                         <p class="font-bold">

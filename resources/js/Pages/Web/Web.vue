@@ -91,58 +91,72 @@ const getImagenesBrand = (product_id) => {
     return brand ? brand.imagen : null;
 };
 
+const generarSchemaMarkup = () => {
+    const schemaMarkup = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": products.value.map((product, index) => ({
+            "@type": "Product",
+            "name": product.name,
+            "description": product.description,
+            "brand": product.brand,
+            "image": `/storage/${product.image_path}`, // Ajusta según tu estructura de imágenes
+            "offers": {
+                "@type": "Offer",
+                "price": product.price,
+                "priceCurrency": "USD"
+            }
+        }))
+    };
+    return JSON.stringify(schemaMarkup, null, 2);
+};
+
+const actualizarSchemaMarkup = () => {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = generarSchemaMarkup();
+    
+    const existingScript = document.querySelector('script[type="application/ld+json"]');
+    if (existingScript) {
+        existingScript.remove();
+    }
+    
+    document.head.appendChild(script);
+};
+
+watch(products, () => {
+    actualizarSchemaMarkup();
+}, { deep: true });
+
 onMounted(() => {
     cargarProductos();
     cargarImagenesProductos();
     cargarImagenesBrands();
+    actualizarSchemaMarkup();
 });
-
-const actualizarSEO = () => {
+const actualizarKeywords = () => {
     nextTick(() => {
-        const productTitles = products.value.map(p => p.name).join(', ');
-        
-        // Actualizar el título de la página
-        document.title = `Productos | SEKAI TECH - ${productTitles}`;
-        
-        // Añadir un H1 dinámico para el título del producto (oculto)
-        const h1Element = document.createElement('h1');
-        h1Element.textContent = `Productos: ${productTitles}`;
-        h1Element.classList.add('hidden-h1'); // Aplicar la clase para ocultar
-        document.body.prepend(h1Element); // Añadir el H1 al inicio del body
-        
-        // Actualizar la descripción meta
-        const metaDescription = document.querySelector('meta[name="description"]');
-        if (metaDescription) {
-            metaDescription.setAttribute('content', `Descubre los mejores productos en SEKAI TECH: ${productTitles}`);
-        }
-        
-        // Actualizar las palabras clave meta
         const keywords = products.value.map(p => p.name.toLowerCase()).join(', ');
-        const metaKeywords = document.querySelector('meta[name="keywords"]');
-        if (metaKeywords) {
-            metaKeywords.setAttribute('content', keywords);
+        let metaKeywords = document.querySelector('meta[name="keywords"]');
+
+        if (!metaKeywords) {
+            metaKeywords = document.createElement('meta');
+            metaKeywords.setAttribute('name', 'keywords');
+            document.head.appendChild(metaKeywords);
         }
-        
-        // Añadir meta tags para author y publisher
-        const metaAuthor = document.createElement('meta');
-        metaAuthor.setAttribute('name', 'author');
-        metaAuthor.setAttribute('content', 'Johann Abad Campos');
-        document.head.appendChild(metaAuthor);
-        
-        const metaPublisher = document.createElement('meta');
-        metaPublisher.setAttribute('name', 'publisher');
-        metaPublisher.setAttribute('content', 'Johann Abad Campos');
-        document.head.appendChild(metaPublisher);
+        metaKeywords.setAttribute('content', keywords);
     });
 };
 
-watch(products, actualizarSEO, { deep: true });
+watch(products, actualizarKeywords, { deep: true });
+
 onMounted(() => {
     cargarProductos();
     cargarImagenesProductos();
     cargarImagenesBrands();
-    actualizarSEO();
+    actualizarKeywords();
 });
+
 </script>
 
 <template>
@@ -178,9 +192,7 @@ onMounted(() => {
     </AppWebLayout>
 </template>
 
-
 <style>
-/* Añade esto en tu archivo de estilos CSS */
 .hidden-h1 {
     position: absolute;
     width: 1px;

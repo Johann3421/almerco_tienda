@@ -30,7 +30,8 @@
             }
         </script>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ $page['props']['title'] ?? config('app.name', 'SEKAI TECH') }}</title>
+
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

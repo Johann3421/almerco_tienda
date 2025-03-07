@@ -17,7 +17,12 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[nam
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => {
+        if (!title || title === "Web") {
+            return "Mi Producto"; // Título por defecto si no se recibe uno válido
+        }
+        return `${title} | Mi Producto`;
+    },
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
 
