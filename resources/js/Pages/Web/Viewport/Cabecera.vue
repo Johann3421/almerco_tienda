@@ -6,6 +6,7 @@ import PapupCarrito from '@/Pages/Web/Carrito/PapupCarrito.vue';
 import Logo from '@assets/img/logo.png';
 import { ref, onMounted } from "vue";
 import { useSettingStore } from '@stores/SettingStore';
+
 const categories = ref([]);
 const groups = ref([]);
 const subgroups = ref([]);
@@ -22,18 +23,17 @@ const cargarcategories = async () => {
 };
 
 const cargargroups = async () => {
-    // Itera sobre cada categoría y agrega sus grupos a la lista de grupos
     categories.value.forEach(category => {
         groups.value.push(...category.groups);
     });
 };
 
 const cargarsubgroups = async () => {
-    // Itera sobre cada grupo y agrega sus subgrupos a la lista de subgrupos
     groups.value.forEach(group => {
         subgroups.value.push(...group.subgroups);
     });
 };
+
 const showGroup = (categoryId) => {
     categories.value.forEach((category) => {
         category.dropdownVisibleSubnav = category.id === categoryId;
@@ -45,6 +45,7 @@ const hideGroup = () => {
         category.dropdownVisibleSubnav = false;
     });
 };
+
 let lastScrollTop = 0;
 
 window.addEventListener('scroll', () => {
@@ -52,23 +53,21 @@ window.addEventListener('scroll', () => {
     let promoDiv = document.getElementById('promoDiv');
     let fixedContent = document.getElementById('fixedContent');
 
-    if (promoDiv && fixedContent) { // Verificar si los elementos existen
+    if (promoDiv && fixedContent) {
         if (currentScroll > lastScrollTop) {
-            // Scroll hacia abajo
             promoDiv.classList.add('hidden');
-            fixedContent.style.top = "0"; // Fija el div en la parte superior
+            fixedContent.style.top = "0";
         } else {
-            // Si el scroll está en la parte superior de la página
             if (currentScroll === 0) {
-                // Scroll hacia arriba
                 promoDiv.classList.remove('hidden');
-                fixedContent.style.top = promoDiv.clientHeight + "px"; // Ajusta la posición debajo del div de promociones
+                fixedContent.style.top = promoDiv.clientHeight + "px";
             }
         }
     }
 
-    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Para manejar el caso cuando el usuario se desplaza hasta el tope de la página
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
 });
+
 const dropdownVisible = ref(false);
 const dropdownVisibleSub = ref(false);
 const showPopup = ref(false);
@@ -76,6 +75,7 @@ const showPopupProduct = ref(false);
 const filteredProducts = ref([]);
 const filteredImagesProducts = ref([]);
 const routeimage = ref([]);
+
 const mostrarimageproductfilter = (product_id, file_path, file) => {
     const linkroute = `/storage/${file_path}/${file}`;
     const existingRoute = routeimage.value.find(route => route.id === product_id);
@@ -83,10 +83,12 @@ const mostrarimageproductfilter = (product_id, file_path, file) => {
         routeimage.value.push({ id: product_id, route: linkroute });
     }
 };
+
 const getRouteForProduct = (productId) => {
     const route = routeimage.value.find(item => item.id === productId);
-    return route ? route.route : ''; // Retorna la ruta si se encuentra, de lo contrario retorna una cadena vacía
+    return route ? route.route : '';
 };
+
 const toggleDropdownSub = () => {
     dropdownVisibleSub.value = !dropdownVisibleSub.value;
 };
@@ -103,14 +105,12 @@ const closePopup = () => {
 const updateSearch = async () => {
     try {
         const response = await axios.get(`/filter-products-search?search=${search.value}`);
-        // Actualizar la lista de productos filtrados
         filteredProducts.value = response.data.products;
         filteredImagesProducts.value = response.data.images;
         cargarImagenesProductos(filteredProducts.value, filteredImagesProducts.value);
         for (let i = 0; i < filteredProducts.value.length; i++) {
             getImagenesProducto(filteredProducts.value[i].id);
         }
-        // Mostrar el popup si hay resultados
         showPopupProduct.value = filteredProducts.value.length > 0;
     } catch (error) {
         console.error('Error al buscar productos:', error);
@@ -125,6 +125,7 @@ const cargarImagenesProductos = (filteredProducts, filteredImages) => {
         });
     }
 };
+
 const getImagenesProducto = (product_id) => {
     const imagenes = imagenesProducto.value.find(item => item.product_id === product_id);
     if (imagenes && imagenes.imagenes.length > 0) {
@@ -138,8 +139,8 @@ const subtotalsoles = ref(0);
 
 const obtenerCantidadPedidos = async () => {
     productos.value = JSON.parse(localStorage.getItem('producto')) || [];
-    cantPedidos.value = 0; // Restablecer a cero
-    subtotalsoles.value = 0; // Restablecer a cero
+    cantPedidos.value = 0;
+    subtotalsoles.value = 0;
 
     productos.value.forEach((item) => {
         cantPedidos.value += item.quantity;
@@ -151,9 +152,11 @@ const handleEnter = async () => {
     const url = route('search-products', { s: search.value.toUpperCase() });
     window.location.href = url;
 };
+
 const hidePopupOnMouseLeave = () => {
     showPopupProduct.value = false;
 };
+
 onMounted(async () => {
     await cargarcategories();
     await cargargroups();
@@ -175,19 +178,21 @@ onMounted(async () => {
             :class="{ 'top-12': settingsGlobal.getImagsupvalue, 'top-0': !settingsGlobal.getImagsupvalue }"
             id="fixedContent">
             <!-- Aplicar degradado vertical aquí -->
-            <div class="hidden lg:flex flex-col bg-white 2xl:px-24"> <!-- Cambiado a fondo blanco -->
+            <div class="hidden lg:flex flex-col bg-white 2xl:px-24">
                 <div class="hidden lg:flex p-5 sm:items-center">
                     <div class="flex justify-between items-center w-full gap-10">
-                        <!-- Logo -->
-                        <Link class="flex cursor-pointer w-72 h-20 px-5" :href="route('web')">
-                        <img class="rounded-md w-full h-full" :src="Logo" alt="Logo">
-                        </Link>
+                        <!-- Logo y Título H1 (oculto) -->
+                        <div class="flex items-center">
+                            <Link class="flex cursor-pointer w-72 h-20 px-5" :href="route('web')">
+                                <img class="rounded-md w-full h-full" :src="Logo" alt="Logo de SEKAI TECH">
+                            </Link>
+                            <h1 class="hidden-h1">SEKAI TECH - Tienda de Tecnología en Huánuco</h1>
+                        </div>
                         <!-- Buscador -->
                         <div class="w-100 hidden lg:flex items-center relative rounded-full">
                             <v-text-field v-model="search" @input="updateSearch" @keyup.enter="handleEnter"
                                 label="Buscar ProductoS" prepend-inner-icon="mdi-magnify" variant="outlined"
                                 hide-details single-line density="comfortable" class="bg-transparent text-black">
-                                <!-- Cambiado a texto negro -->
                             </v-text-field>
                             <!-- Popup de productos filtrados -->
                             <div v-if="showPopupProduct"
@@ -197,7 +202,7 @@ onMounted(async () => {
                                     <Link :href="route('productid', { slug: product.slug })"
                                         v-for="product in filteredProducts" :key="product.id"
                                         class="flex items-center gap-1 px-4 py-2 cursor-pointer hover:bg-gray-100">
-                                    <img :src="getRouteForProduct(product.id)" alt="Img"
+                                    <img :src="getRouteForProduct(product.id)" :alt="`Imagen de ${product.name}`"
                                         class="h-12 w-12 rounded object-cover" />
                                     <p class="flex flex-col text-sm text-gray-800">
                                         <span>{{ product.name }}</span>
@@ -215,15 +220,14 @@ onMounted(async () => {
                             <div class="flex flex-row items-center">
                                 <button @click="togglePopup" class="relative">
                                     <i class="mdi mdi-cart text-4xl text-black p-2 rounded-xl m-2"></i>
-                                    <!-- Cambiado a texto negro -->
                                     <span class="absolute text-black -top-3 right-0 bg-white rounded-full px-2">{{
-                                        cantPedidos }}</span> <!-- Cambiado a texto negro y fondo blanco -->
+                                        cantPedidos }}</span>
                                 </button>
                                 <span class="text-black pt-4"><span class="mx-1">S/.</span>{{
                                     subtotalsoles.toLocaleString('en-US', {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
-                                    }) }}</span> <!-- Cambiado a texto negro -->
+                                    }) }}</span>
                             </div>
                         </div>
                     </div>
@@ -231,7 +235,6 @@ onMounted(async () => {
                         <Nav />
                     </div>
                     <div class="text-black text-center text-xs font-bold bg-green-500 px-1 py-1 rounded-lg">
-                        <!-- Cambiado a fondo verde -->
                         <p class="w-20">T. Cambios <br>S/. {{ settingsGlobal.getDolarValue }}</p>
                     </div>
                 </div>
@@ -352,3 +355,17 @@ onMounted(async () => {
         </div>
     </div>
 </template>
+
+<style>
+/* Añade esto en tu archivo de estilos CSS */
+.hidden-h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+</style>

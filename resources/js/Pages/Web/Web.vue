@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import AppWebLayout from '@/Layouts/AppWebLayout.vue';
 import Banner from '@/Pages/Web/Viewport/Banner.vue';
 import Products from '@/Layouts/Web/Products/Products.vue';
@@ -8,7 +8,7 @@ import NavMobil from '@/Pages/Web/Carrito/NavMobil.vue';
 import CartMain from '@/Pages/Web/Carts/CartProductsMain.vue';
 import SmallNav from '@/Pages/Web/Viewport/SmallNav.vue';
 import { useSettingStore } from '@stores/SettingStore';
-// Define la variable reactiva para almacenar el término de búsqueda
+
 const props = defineProps({
     categories: Array,
     banners: Array,
@@ -17,38 +17,32 @@ const props = defineProps({
     images: Object,
     brands: Array
 });
+
 const settingsGlobal = useSettingStore();
 const filteredProducts = ref([]);
 const imagenesProducto = ref([]);
 const imagenesBrand = ref([]);
-
-const handleSearchChange = (searchTerm) => {
-    filteredProducts.value = searchTerm;
-}
-
 const products = ref([]);
 
 const cargarProductos = () => {
-    // Iterar sobre cada subgrupo y agregar sus productos a la lista de productos
-    props.subgroups.forEach(subgroup => {
-        products.value.push(...subgroup.products);
-    });
+    products.value = props.subgroups.flatMap(subgroup => subgroup.products);
 };
+
 const productosPorFila = computed(() => {
-    const tamañoDelCart = 350; // Ajusta este valor según el ancho del
-    return Math.floor(window.innerWidth / tamañoDelCart);
+    return Math.floor(window.innerWidth / 350);
 });
-// Método para cargar las imágenes de cada producto
+
 const cargarImagenesProductos = () => {
-    if (props.images && props.images.length > 0) {
+    if (props.images) {
         products.value.forEach(producto => {
             const imagenes = props.images.filter(imagen => imagen.product_id === producto.id);
             imagenesProducto.value.push({ product_id: producto.id, imagenes });
         });
     }
 };
+
 const cargarImagenesBrands = () => {
-    if (props.brands && props.brands.length > 0) {
+    if (props.brands) {
         props.brands.forEach(brand => {
             brand.filter_items.forEach(filterItem => {
                 filterItem.products.forEach(product => {
@@ -64,29 +58,53 @@ const cargarImagenesBrands = () => {
         });
     }
 };
-const productGroups = computed(() => {
-    const groups = [];
-    for (let i = 0; i < products.value.length; i += productosPorFila.value) {
-        groups.push(products.value.slice(i, i + productosPorFila.value));
-    }
-    return groups;
-});
-watch(() => window.innerWidth, () => {
-    // Calcula nuevamente el número de productos por fila
-    productosPorFila.value = Math.floor(window.innerWidth / tamañoDelCart);
-});
-// Método para obtener las imágenes asociadas con un product_id específico
-const getImagenesProducto = (product_id) => {
-    const imagenes = imagenesProducto.value.find(item => item.product_id === product_id);
-    return imagenes ? imagenes.imagenes : [];
+
+const actualizarSEO = () => {
+    nextTick(() => {
+        const productTitles = products.value.map(p => p.name).join(', ');
+        
+        // Actualizar el título de la página
+        document.title = `Productos | SEKAI TECH - ${productTitles}`;
+        
+        // Añadir un H1 dinámico para el título del producto (oculto)
+        const h1Element = document.createElement('h1');
+        h1Element.textContent = `Productos: ${productTitles}`;
+        h1Element.classList.add('hidden-h1'); // Aplicar la clase para ocultar
+        document.body.prepend(h1Element); // Añadir el H1 al inicio del body
+        
+        // Actualizar la descripción meta
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+            metaDescription.setAttribute('content', `Descubre los mejores productos en SEKAI TECH: ${productTitles}`);
+        }
+        
+        // Actualizar las palabras clave meta
+        const keywords = products.value.map(p => p.name.toLowerCase()).join(', ');
+        const metaKeywords = document.querySelector('meta[name="keywords"]');
+        if (metaKeywords) {
+            metaKeywords.setAttribute('content', keywords);
+        }
+        
+        // Añadir meta tags para author y publisher
+        const metaAuthor = document.createElement('meta');
+        metaAuthor.setAttribute('name', 'author');
+        metaAuthor.setAttribute('content', 'Johann Abad Campos');
+        document.head.appendChild(metaAuthor);
+        
+        const metaPublisher = document.createElement('meta');
+        metaPublisher.setAttribute('name', 'publisher');
+        metaPublisher.setAttribute('content', 'Johann Abad Campos');
+        document.head.appendChild(metaPublisher);
+    });
 };
-const getImagenesBrand = (product_id) => {
-    const brand = imagenesBrand.value.find(item => item.product_id === product_id);
-    return brand ? brand.imagen : null;
-};
-cargarProductos();
-cargarImagenesProductos();
-cargarImagenesBrands();
+
+watch(products, actualizarSEO, { deep: true });
+onMounted(() => {
+    cargarProductos();
+    cargarImagenesProductos();
+    cargarImagenesBrands();
+    actualizarSEO();
+});
 </script>
 
 <template>
@@ -102,7 +120,6 @@ cargarImagenesBrands();
             <img class="aspect-video w-full md:hidden" v-if="settingsGlobal.getImagmedmobilevalue" :src="`/storage/${settingsGlobal.getImagmedmobilevalue.file_path}/${settingsGlobal.getImagmedmobilevalue.file}`" alt="Imagen de móvil">
         </div>
         <SmallNav :categories="categories" nombreboton="OFERTAS" />
-        <!-- Carrusel de Productos -->
         <div class="sm:px-10 2xl:px-20">
             <v-carousel hide-delimiters style="height: 100%;">
                 <v-carousel-item v-for="(productGroup, groupIndex) in productGroups" :key="groupIndex">
@@ -115,7 +132,20 @@ cargarImagenesBrands();
                 </v-carousel-item>
             </v-carousel>
         </div>
-        <!-- NAV EN FORMATO MOBIL -->
         <NavMobil :categories="categories" :images="images" />
     </AppWebLayout>
 </template>
+
+<style>
+/* Añade esto en tu archivo de estilos CSS */
+.hidden-h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+</style>

@@ -303,25 +303,45 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy(string $id)
+public function destroy(string $id)
 {
     try {
         // Buscar el producto por ID
         $product = Product::findOrFail($id);
+
+        // Obtener imágenes asociadas al producto
+        $images = ProductImage::where('product_id', $id)->get();
+
+        // Eliminar las imágenes del almacenamiento (base en storage y en public/storage/products)
+        foreach ($images as $image) {
+            if ($image->image_path) {
+                // Eliminar de storage/app/public
+                Storage::delete("public/" . $image->image_path);
+
+                // Eliminar de public/storage/products
+                $filePath = public_path("storage/products/" . basename($image->image_path));
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+        }
+
+        // Eliminar las imágenes de la base de datos
+        ProductImage::where('product_id', $id)->delete();
 
         // Eliminar el producto de la base de datos
         $product->delete();
 
         // Retornar una respuesta exitosa
         return response()->json([
-            'message' => 'Producto eliminado correctamente.',
+            'message' => 'Producto e imágenes eliminados correctamente.',
         ], 200);
     } catch (\Exception $e) {
-        // Retornar un error si algo falla
         return response()->json([
             'message' => 'Error al eliminar el producto.',
             'error' => $e->getMessage(),
         ], 500);
     }
 }
+
 }

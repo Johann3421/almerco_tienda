@@ -4,6 +4,7 @@ import { ref, defineProps, onMounted, computed, watch } from "vue";
 import CartMain from "@/Pages/Web/Carts/CartProductsMain.vue";
 import PapupCarrito from '@/Pages/Web/Carrito/PapupCarrito.vue';
 import { useSettingStore } from "@stores/SettingStore";
+
 // Define las props del componente
 const props = defineProps({
     producto: Object,
@@ -16,6 +17,7 @@ const props = defineProps({
     brands: Array,
     productSpecifications: Array,
 });
+
 const settingsGlobal = useSettingStore();
 const id = ref(0);
 const pricesoles = ref(0);
@@ -44,6 +46,7 @@ const routeimage = ref('');
 const manufacturer_url = ref('');
 const productespecificaciones = ref([]);
 
+// Inicialización de datos
 categoriaref.value = capitalizeFirstLetter(props.productref[0].category.name);
 categoriarefslug.value = props.productref[0].category.slug;
 gruporef.value = capitalizeFirstLetter(props.productref[0].group.name);
@@ -71,7 +74,8 @@ const precioEnSoles = computed(() => {
     pricesoles.value = (pricedolar.value * parseFloat(settingsGlobal.getDolarValue)).toFixed(2);
     return pricesoles.value;
 });
-// convertir a capitalize
+
+// Función para capitalizar la primera letra de cada palabra
 function capitalizeFirstLetter(string) {
     if (!string) return "";
     return string
@@ -81,11 +85,9 @@ function capitalizeFirstLetter(string) {
         .join(" ");
 }
 
+// Cargar imágenes del producto
 const items = ref([]);
-if (
-    typeof props.productimages === "object" &&
-    Object.keys(props.productimages).length > 0
-) {
+if (typeof props.productimages === "object" && Object.keys(props.productimages).length > 0) {
     items.value = Object.values(props.productimages).map((image) => ({
         src: `/storage/${image.file_path}/${image.file}`,
     }));
@@ -93,25 +95,60 @@ if (
     console.error("No se han encontrado imágenes para el producto");
 }
 
+// Resaltar el título en el buscador con palabras clave estratégicas
+const highlightTitle = (title) => {
+    const keywords = [
+        "comprar", 
+        "oferta", 
+        "envío gratis", 
+        "mejor precio", 
+        "Huánuco", 
+        "tienda en Huánuco", 
+        "productos en Huánuco", 
+        "venta en Huánuco", 
+        "entrega en Huánuco", 
+        "descuentos en Huánuco", 
+        "promociones en Huánuco", 
+        "comprar en línea", 
+        "compra segura", 
+        "calidad garantizada", 
+        "precios bajos", 
+        "ofertas exclusivas", 
+        "envío rápido", 
+        "atención al cliente", 
+        "pago seguro", 
+        "productos originales", 
+        "marcas reconocidas"
+    ];
+
+    let highlightedTitle = title;
+    keywords.forEach(keyword => {
+        const regex = new RegExp(`(${keyword})`, "gi");
+        highlightedTitle = highlightedTitle.replace(regex, "<strong>$1</strong>");
+    });
+    return highlightedTitle;
+};
+
+nameproduct.value = highlightTitle(nameproduct.value);
+
+// Función para agregar al carrito
 const agregarAlCarrito = () => {
     if (stock.value === 0) {
         alert("Este producto no tiene stock disponible.");
-        return; // Salimos de la función si no hay stock
+        return;
     }
     togglePopup();
     const product = JSON.parse(localStorage.getItem("producto")) || [];
     const index = product.findIndex((item) => item.id === id.value);
     if (index !== -1) {
         const nuevaCantidad = product[index].quantity + quantity.value;
-
         if (nuevaCantidad > stock.value) {
             alert("No puedes agregar más de lo disponible en stock.");
-            return; // Salimos si se supera el stock
+            return;
         }
         product[index].quantity += quantity.value;
         product[index].subtotal = product[index].price * product[index].quantity;
         localStorage.setItem("producto", JSON.stringify(product));
-        // closeCantP();
         return;
     } else {
         product.push({
@@ -133,11 +170,10 @@ const agregarAlCarrito = () => {
             manufacturer_url: manufacturer_url.value,
         });
         localStorage.setItem("producto", JSON.stringify(product));
-        // closeCantP();
-        // window.location.reload();
     }
 };
 
+// Funciones para incrementar y decrementar la cantidad
 const incrementQuantity = () => {
     if (quantity.value < maxQuantity.value) {
         quantity.value++;
@@ -149,6 +185,8 @@ const decrementQuantity = () => {
         quantity.value--;
     }
 };
+
+// Cargar imágenes de productos y marcas
 const cargarImagenesProductos = () => {
     if (props.images && props.images.length > 0) {
         products.value.forEach((producto) => {
@@ -157,6 +195,7 @@ const cargarImagenesProductos = () => {
         });
     }
 };
+
 const cargarImagenesBrands = () => {
     if (props.brands && props.brands.length > 0) {
         props.brands.forEach(brand => {
@@ -175,15 +214,18 @@ const cargarImagenesBrands = () => {
     }
 };
 
+// Obtener imágenes del producto y la marca
 const getImagenesProducto = (product_id) => {
     const imagenes = imagenesProducto.value.find((item) => item.product_id === product_id);
     return imagenes ? imagenes.imagenes : [];
 };
+
 const getImagenesBrand = (product_id) => {
     const brand = imagenesBrand.value.find(item => item.product_id === product_id);
     return brand ? brand.imagen : null;
 };
-// PARA EL ZOOM
+
+// Funciones para el zoom de imágenes
 const zoomed = ref(false);
 const zoomedImageSrc = ref("");
 
@@ -195,14 +237,20 @@ const showZoomedImage = (src) => {
 const closeZoomedImage = () => {
     zoomed.value = false;
 };
+
+// Cálculo de productos por fila
 const productosPorFila = computed(() => {
     const tamañoDelCart = 350;
     return Math.floor(window.innerWidth / tamañoDelCart);
 });
+
+// Enlace de WhatsApp
 const whatsappLink = computed(() => {
     const encodedProductName = encodeURIComponent(`*${nameproduct.value}*`);
     return `https://wa.me/51991375813?text=¡Hola!%20,%20quiero%20comprar%20este%20producto:%0A${encodedProductName}`;
 });
+
+// Agrupación de productos relacionados
 const productGroups = computed(() => {
     const groups = [];
     for (let i = 0; i < products.value.length; i += productosPorFila.value) {
@@ -217,54 +265,59 @@ const productGroups = computed(() => {
     return groups;
 });
 
+// Filtrado de productos relacionados
 const filteredProducts = computed(() => {
     const selectedProduct = nameproduct.value.toLowerCase();
-    const firstWord = selectedProduct.split(' ')[0]; // Obtiene la primera palabra
+    const firstWord = selectedProduct.split(' ')[0];
 
-    // Flatea los arrays anidados dentro de productGroups
     const allProductsInGroups = productGroups.value.flat();
-
-    // Filtra los productos que comienzan con la primera palabra
     const filtered = allProductsInGroups.filter(product =>
         product?.name?.toLowerCase().startsWith(firstWord)
     );
     return filtered;
 });
 
+// Observar cambios en el tamaño de la ventana
 watch(
     () => window.innerWidth,
     () => {
-        // Calcula nuevamente el número de productos por fila
         productosPorFila.value = Math.floor(window.innerWidth / tamañoDelCart);
     }
 );
-// para ocultar y mostrar
+
+// Mostrar/ocultar productos adicionales
 const showMore = ref(true);
-// Función para alternar la visibilidad de los productos adicionales
 const toggleMore = () => {
     showMore.value = !showMore.value;
 };
+
+// Obtener cantidad de pedidos y subtotal
 const productos = ref([]);
 const cantPedidos = ref(0);
 const subtotalsoles = ref(0);
 const showPopup = ref(false);
+
 const obtenerCantidadPedidos = () => {
     productos.value = JSON.parse(localStorage.getItem('producto')) || [];
-    cantPedidos.value = 0; // Restablecer a cero
-    subtotalsoles.value = 0; // Restablecer a cero
+    cantPedidos.value = 0;
+    subtotalsoles.value = 0;
 
     productos.value.forEach((item) => {
         cantPedidos.value += item.quantity;
         subtotalsoles.value += item.subtotalsoles;
     });
 };
+
 const togglePopup = () => {
     showPopup.value = !showPopup.value;
 };
+
 const closePopup = () => {
     showPopup.value = false;
     obtenerCantidadPedidos();
 };
+
+// Inicialización al montar el componente
 onMounted(() => {
     products.value = props.products;
     maxQuantity.value = stock.value;
@@ -280,17 +333,17 @@ onMounted(() => {
     <div class="flex flex-col md:gap-10">
         <div class="relative p-5 md:px-6 xl:px-20 2xl:px-32">
             <div class="py-5 text-md text-plomomediooscuro">
-                <Link class="hover:text-naranja" :href="route('web')"><i class="mdi mdi-home mr-1"></i>Inicio</Link>
+                <Link class="hover:text-azul" :href="route('web')"><i class="mdi mdi-home mr-1"></i>Inicio</Link>
                 <span class="mx-1 font-medium">/</span>
-                <Link class="hover:text-naranja" :href="route('categoryid', { slug: categoriarefslug })">
+                <Link class="hover:text-azul" :href="route('categoryid', { slug: categoriarefslug })">
                 {{ categoriaref }}
                 </Link>
                 <span class="mx-1 font-medium">/</span>
-                <Link class="hover:text-naranja" :href="route('groupid', { slug: gruporefslug })">
+                <Link class="hover:text-azul" :href="route('groupid', { slug: gruporefslug })">
                 {{ gruporef }}
                 </Link>
                 <span class="mx-1 font-medium">/</span>
-                <Link class="hover:text-naranja" :href="route('subgroupid', { slug: subgruporefslug })">
+                <Link class="hover:text-azul" :href="route('subgroupid', { slug: subgruporefslug })">
                 {{ subgruporef }}
                 </Link>
                 <span class="mx-1 font-medium">/</span>
@@ -333,8 +386,10 @@ onMounted(() => {
                 </div>
                 <div class="flex flex-col lg:pl-5 gap-4 lg:w-1/2">
                     <div>
-                        <h1 class="text-2xl font-bold">{{ nameproduct }}</h1>
-                        <p class="text-left">{{ prodDescription }}</p>
+                        <h1 class="text-2xl font-bold">{{ nameproduct }} - Alta Calidad y Durabilidad | [SEKAI TECH]
+                        </h1>
+                        <p class="text-left">{{ prodDescription }} - Compra ahora y disfruta de envío rápido y seguro.
+                        </p>
                     </div>
                     <div>
                         <p class="font-bold">
@@ -356,12 +411,19 @@ onMounted(() => {
                         </div>
                         <div class="flex flex-col xl:flex-row gap-2 xl:gap-4 items-center p-2">
                             <p class="p-2 text-blue-500">
-                                <a href="#especificaciones" class="hidden xl:block rounded-sm font-bold"> Ver mas especificaciones...</a>
-                                <a href="#especificacionesmobil" class="xl:hidden rounded-sm font-bold"> Ver mas especificaciones...</a>
+                                <a href="#especificaciones" class="hidden xl:block rounded-sm font-bold"> Ver mas
+                                    especificaciones...</a>
+                                <a href="#especificacionesmobil" class="xl:hidden rounded-sm font-bold"> Ver mas
+                                    especificaciones...</a>
                             </p>
                             <p class="p-2 border rounded-lg hover:bg-blue-500 hover:text-white">
-                                <a :href="manufacturer_url" target="_blank" class="hidden xl:block rounded-sm font-medium"><i class="mdi mdi-information-outline small-icon"></i> Información del Fabricante</a>
-                                <a :href="manufacturer_url" class="xl:hidden rounded-sm font-medium"><i class="mdi mdi-information-outline small-icon"></i> Información del Fabricante</a>
+                                <a :href="manufacturer_url" target="_blank"
+                                    class="hidden xl:block rounded-sm font-medium"><i
+                                        class="mdi mdi-information-outline small-icon"></i> Información del
+                                    Fabricante</a>
+                                <a :href="manufacturer_url" class="xl:hidden rounded-sm font-medium"><i
+                                        class="mdi mdi-information-outline small-icon"></i> Información del
+                                    Fabricante</a>
                             </p>
                         </div>
                     </div>
@@ -371,9 +433,9 @@ onMounted(() => {
                         <p
                             class="rounded-lg bg-encabezado p-2 text-white font-bold flex items-center justify-center w-full">
                             S/. {{ precioEnSoles.toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }) }}
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }) }}
                         </p>
                     </div>
                     <div class="text-sm text-plomomediooscuro font-medium">
@@ -402,7 +464,8 @@ onMounted(() => {
                         </div>
                         <div class="my-2 md:mx-2 w-full">
                             <button @click="agregarAlCarrito"
-                                class="rounded bg-cremaoscuro text-white p-3 text-md font-bold transition hover:scale-105 w-full">
+                                class="rounded text-white p-3 text-md font-bold transition hover:scale-105 w-full"
+                                style="background-color: #1E90FF;">
                                 AÑADIR AL CARRITO
                             </button>
                         </div>
@@ -428,7 +491,8 @@ onMounted(() => {
         </div>
         <div class="sm:mx-10 xl:mx-28">
             <div class="flex flex-col p-5 justify-center items-center gap-5">
-                <h1 class="w-80 border-b-4 border-naranja text-orange-800 text-center font-medium text-xl pb-2">Especificaciones</h1>
+                <h1 class="w-80 border-b-4 border-azul text-blue-800 text-center font-medium text-xl pb-2">
+                    Especificaciones</h1>
                 <div class="md:px-36 w-full especificaciones">
                     <table class="min-w-full table-auto border-collapse">
                         <tbody>
@@ -459,7 +523,8 @@ onMounted(() => {
             <div v-if="showMore" class="relative flex-row">
                 <div class="flex flex-wrap justify-center px-5">
                     <CartMain v-for="product in filteredProducts" :key="product.product_id" :producto="product"
-                        :images="getImagenesProducto(product.id)" :brand="getImagenesBrand(product.id)" :totalimages="images" />
+                        :images="getImagenesProducto(product.id)" :brand="getImagenesBrand(product.id)"
+                        :totalimages="images" />
                 </div>
             </div>
             <!-- Carrusel de Productos -->
@@ -478,7 +543,7 @@ onMounted(() => {
         </div>
         <div v-if="zoomed"
             class="fixed inset-0 z-10 flex items-center justify-center bg-plomooscuro bg-opacity-75 xl:px-20 py-10">
-            <i class="mdi mdi-close cursor-pointer text-2xl font-bold absolute text-white top-12 right-2 xl:right-24 px-1 bg-naranja rounded-full"
+            <i class="mdi mdi-close cursor-pointer text-2xl font-bold absolute text-white top-12 right-2 xl:right-24 px-1 bg-azul rounded-full"
                 @click="closeZoomedImage"></i>
             <div class="bg-white px-10 md:rounded-xl w-full h-full">
                 <v-carousel hide-delimiters style="height: 100%; width: 100%">
@@ -555,13 +620,13 @@ onMounted(() => {
 
     a {
         text-decoration: none;
-        color: #F51800;
-        border: 1px solid #F51800;
+        color: #1E90FF;
+        border: 1px solid #1E90FF;
         padding: 0.25rem 1rem;
         border-radius: 0.25rem;
 
         &:hover {
-            background-color: #F51800;
+            background-color: #1E90FF;
             color: #fff;
         }
     }
