@@ -91,6 +91,18 @@ const getImagenesBrand = (product_id) => {
     return brand ? brand.imagen : null;
 };
 
+// ✅ Generar contenido SEO-friendly para <noscript>
+const noscriptContent = computed(() => `
+    <h1>Descubre nuestros productos</h1>
+    <ul>
+        ${products.value.map(product => `
+            <li>
+                <strong>${product.name}</strong>: ${product.description || 'Producto disponible en nuestra tienda.'}
+            </li>
+        `).join('')}
+    </ul>
+`);
+
 const generarSchemaMarkup = () => {
     const schemaMarkup = {
         "@context": "https://schema.org",
@@ -100,7 +112,7 @@ const generarSchemaMarkup = () => {
             "name": product.name,
             "description": product.description,
             "brand": product.brand,
-            "image": `/storage/${product.image_path}`, // Ajusta según tu estructura de imágenes
+            "image": `/storage/${product.image_path}`,
             "offers": {
                 "@type": "Offer",
                 "price": product.price,
@@ -134,6 +146,7 @@ onMounted(() => {
     cargarImagenesBrands();
     actualizarSchemaMarkup();
 });
+
 const actualizarKeywords = () => {
     nextTick(() => {
         const keywords = products.value.map(p => p.name.toLowerCase()).join(', ');
@@ -156,10 +169,12 @@ onMounted(() => {
     cargarImagenesBrands();
     actualizarKeywords();
 });
-
 </script>
 
 <template>
+    <!-- ✅ NOSCRIPT para SEO -->
+    <noscript v-html="noscriptContent"></noscript>
+
     <AppWebLayout title="SEKAI TECH" class="bg-fondoback" :categories="categories">
         <Header @search-change="handleSearchChange" :categories="categories" :images="images" />
         <div class="lg:mt-44">
@@ -167,10 +182,18 @@ onMounted(() => {
         </div>
         <SmallNav :categories="categories" nombreboton="NOVEDADES" />
         <Products :subgroups="subgroups" :images="images" :brands="brands" />
+
         <div class="py-10" v-if="settingsGlobal.getImagmedvalue">
-            <img class="hidden md:block aspect-39/10 w-full" :src="`/storage/${settingsGlobal.getImagmedvalue.file_path}/${settingsGlobal.getImagmedvalue.file}`" alt="">
-            <img class="aspect-video w-full md:hidden" v-if="settingsGlobal.getImagmedmobilevalue" :src="`/storage/${settingsGlobal.getImagmedmobilevalue.file_path}/${settingsGlobal.getImagmedmobilevalue.file}`" alt="Imagen de móvil">
+            <img class="hidden md:block aspect-39/10 w-full"
+                :src="`/storage/${settingsGlobal.getImagmedvalue.file_path}/${settingsGlobal.getImagmedvalue.file}`"
+                :alt="settingsGlobal.getImagmedvalue.description || 'Imagen destacada del producto'">
+            
+            <img class="aspect-video w-full md:hidden"
+                v-if="settingsGlobal.getImagmedmobilevalue"
+                :src="`/storage/${settingsGlobal.getImagmedmobilevalue.file_path}/${settingsGlobal.getImagmedmobilevalue.file}`"
+                :alt="settingsGlobal.getImagmedmobilevalue.description || 'Imagen destacada en móvil'">
         </div>
+
         <SmallNav :categories="categories" nombreboton="OFERTAS" />
         
         <!-- Carrusel de Productos -->
@@ -191,16 +214,3 @@ onMounted(() => {
         <NavMobil :categories="categories" :images="images" />
     </AppWebLayout>
 </template>
-
-<style>
-.hidden-h1 {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
-</style>

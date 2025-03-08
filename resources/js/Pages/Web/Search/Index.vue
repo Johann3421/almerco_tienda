@@ -13,7 +13,7 @@ const handleSearchChange = (searchTerm) => {
 </script>
 
 <template>
-    <AppWebLayout title="Grupo Almerco" class="bg-fondoback" :categories="$page.props.categories">
+    <AppWebLayout title="SEKAI TECH" class="bg-fondoback" :categories="$page.props.categories">
         <Header @search-change="handleSearchChange" :categories="$page.props.categories" :images="$page.props.images" />
         <div class="mt-60">
             <h1 class="font-bold text-xl px-5">RESULTADOS DE BÚSQUEDA: </h1>

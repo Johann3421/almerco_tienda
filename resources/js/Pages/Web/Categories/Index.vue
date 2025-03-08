@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-    <AppWebLayout title="Web" class="bg-fondoback" :categories="$page.props.categories">
+    <AppWebLayout title="SEKAI TECH" class="bg-fondoback" :categories="$page.props.categories">
         <Header :categories="$page.props.categories" :images="$page.props.images" />
         <div class="mt-16">
             <Index :subgroups="$page.props.subgroups" :products="$page.props.products" :images="$page.props.images" :brands="$page.props.brands" />

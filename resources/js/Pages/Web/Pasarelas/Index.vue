@@ -16,7 +16,7 @@ const handleSearchChange = (searchTerm) => {
 </script>
 
 <template>
-    <AppWebLayout title="Grupo Almerco" class="bg-fondoback" :categories="categories">
+    <AppWebLayout title="SEKAI TECH" class="bg-fondoback" :categories="categories">
         <Header @search-change="handleSearchChange" :categories="categories" :images="images" />
         <div class="mt-12">
             <Index :images="images" :products="products" />

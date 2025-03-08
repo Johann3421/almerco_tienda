@@ -598,8 +598,8 @@ const productJsonLd = computed(() => JSON.stringify({
         </div>
         <div v-if="zoomed"
             class="fixed inset-0 z-10 flex items-center justify-center bg-plomooscuro bg-opacity-75 xl:px-20 py-10">
-            <i class="mdi mdi-close cursor-pointer text-2xl font-bold absolute text-white top-12 right-2 xl:right-24 px-1 bg-azul rounded-full"
-                @click="closeZoomedImage"></i>
+            <i class="mdi mdi-close cursor-pointer text-2xl font-bold absolute text-blue-500 top-12 right-2 xl:right-24 px-1 bg-blue-500 rounded-full hover:bg-blue-700 transition"
+   @click="closeZoomedImage"></i>
             <div class="bg-white px-10 md:rounded-xl w-full h-full">
                 <v-carousel hide-delimiters style="height: 100%; width: 100%">
                     <v-carousel-item v-for="(item, i) in items" :key="i">
