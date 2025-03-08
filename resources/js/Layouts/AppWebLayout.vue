@@ -33,7 +33,9 @@ const getDolarValue = async () => {
       }
 };
 getDolarValue();
+
 </script>
+
 
 <template>
     <div>

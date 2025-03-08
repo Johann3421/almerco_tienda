@@ -4,8 +4,18 @@ import Promotion from '@/Pages/Web/Viewport/Promotion.vue';
 import Nav from '@/Pages/Web/Viewport/Nav.vue';
 import PapupCarrito from '@/Pages/Web/Carrito/PapupCarrito.vue';
 import Logo from '@assets/img/logo.png';
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useSettingStore } from '@stores/SettingStore';
+
+// Implementación manual de debounce
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
 
 const categories = ref([]);
 const groups = ref([]);
@@ -18,20 +28,16 @@ const props = defineProps({
 });
 const settingsGlobal = useSettingStore();
 
-const cargarcategories = async () => {
+const cargarcategories = () => {
     categories.value = props.categories;
 };
 
-const cargargroups = async () => {
-    categories.value.forEach(category => {
-        groups.value.push(...category.groups);
-    });
+const cargargroups = () => {
+    groups.value = categories.value.flatMap(category => category.groups);
 };
 
-const cargarsubgroups = async () => {
-    groups.value.forEach(group => {
-        subgroups.value.push(...group.subgroups);
-    });
+const cargarsubgroups = () => {
+    subgroups.value = groups.value.flatMap(group => group.subgroups);
 };
 
 const showGroup = (categoryId) => {
@@ -46,9 +52,8 @@ const hideGroup = () => {
     });
 };
 
-let lastScrollTop = 0;
-
-window.addEventListener('scroll', () => {
+// Usando la función debounce manual
+const handleScroll = debounce(() => {
     let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
     let promoDiv = document.getElementById('promoDiv');
     let fixedContent = document.getElementById('fixedContent');
@@ -57,16 +62,17 @@ window.addEventListener('scroll', () => {
         if (currentScroll > lastScrollTop) {
             promoDiv.classList.add('hidden');
             fixedContent.style.top = "0";
-        } else {
-            if (currentScroll === 0) {
-                promoDiv.classList.remove('hidden');
-                fixedContent.style.top = promoDiv.clientHeight + "px";
-            }
+        } else if (currentScroll === 0) {
+            promoDiv.classList.remove('hidden');
+            fixedContent.style.top = promoDiv.clientHeight + "px";
         }
     }
 
     lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-});
+}, 100);
+
+let lastScrollTop = 0;
+window.addEventListener('scroll', handleScroll);
 
 const dropdownVisible = ref(false);
 const dropdownVisibleSub = ref(false);
@@ -78,8 +84,7 @@ const routeimage = ref([]);
 
 const mostrarimageproductfilter = (product_id, file_path, file) => {
     const linkroute = `/storage/${file_path}/${file}`;
-    const existingRoute = routeimage.value.find(route => route.id === product_id);
-    if (!existingRoute) {
+    if (!routeimage.value.some(route => route.id === product_id)) {
         routeimage.value.push({ id: product_id, route: linkroute });
     }
 };
@@ -102,26 +107,27 @@ const closePopup = () => {
     obtenerCantidadPedidos();
 };
 
-const updateSearch = async () => {
+// Usando la función debounce manual
+const updateSearch = debounce(async () => {
     try {
         const response = await axios.get(`/filter-products-search?search=${search.value}`);
         filteredProducts.value = response.data.products;
         filteredImagesProducts.value = response.data.images;
         cargarImagenesProductos(filteredProducts.value, filteredImagesProducts.value);
-        for (let i = 0; i < filteredProducts.value.length; i++) {
-            getImagenesProducto(filteredProducts.value[i].id);
-        }
+        filteredProducts.value.forEach(product => getImagenesProducto(product.id));
         showPopupProduct.value = filteredProducts.value.length > 0;
     } catch (error) {
         console.error('Error al buscar productos:', error);
     }
-};
+}, 300);
 
 const cargarImagenesProductos = (filteredProducts, filteredImages) => {
     if (filteredProducts && filteredProducts.length > 0) {
         filteredProducts.forEach(product => {
             const imagenes = filteredImages.filter(image => image.product_id === product.id);
-            imagenesProducto.value.push({ product_id: product.id, imagenes });
+            if (imagenes.length > 0) {
+                imagenesProducto.value.push({ product_id: product.id, imagenes });
+            }
         });
     }
 };
@@ -137,18 +143,13 @@ const productos = ref([]);
 const cantPedidos = ref(0);
 const subtotalsoles = ref(0);
 
-const obtenerCantidadPedidos = async () => {
+const obtenerCantidadPedidos = () => {
     productos.value = JSON.parse(localStorage.getItem('producto')) || [];
-    cantPedidos.value = 0;
-    subtotalsoles.value = 0;
-
-    productos.value.forEach((item) => {
-        cantPedidos.value += item.quantity;
-        subtotalsoles.value += item.subtotalsoles;
-    });
+    cantPedidos.value = productos.value.reduce((acc, item) => acc + item.quantity, 0);
+    subtotalsoles.value = productos.value.reduce((acc, item) => acc + item.subtotalsoles, 0);
 };
 
-const handleEnter = async () => {
+const handleEnter = () => {
     const url = route('search-products', { s: search.value.toUpperCase() });
     window.location.href = url;
 };
@@ -157,11 +158,11 @@ const hidePopupOnMouseLeave = () => {
     showPopupProduct.value = false;
 };
 
-onMounted(async () => {
-    await cargarcategories();
-    await cargargroups();
-    await cargarsubgroups();
-    await obtenerCantidadPedidos();
+onMounted(() => {
+    cargarcategories();
+    cargargroups();
+    cargarsubgroups();
+    obtenerCantidadPedidos();
 });
 </script>
 
@@ -177,14 +178,19 @@ onMounted(async () => {
         <div class="fixed z-10"
             :class="{ 'top-12': settingsGlobal.getImagsupvalue, 'top-0': !settingsGlobal.getImagsupvalue }"
             id="fixedContent">
-            <!-- Aplicar degradado vertical aquí -->
             <div class="hidden lg:flex flex-col bg-white 2xl:px-24">
                 <div class="hidden lg:flex p-5 sm:items-center">
                     <div class="flex justify-between items-center w-full gap-10">
-                        <!-- Logo y Título H1 (oculto) -->
+                        <!-- Logo y Título H1 -->
                         <div class="flex items-center">
                             <Link class="flex cursor-pointer w-72 h-20 px-5" :href="route('web')">
-                                <img class="rounded-md w-full h-full" :src="Logo" alt="Logo de SEKAI TECH">
+                                <img 
+                                    :src="Logo" 
+                                    :srcset="`${Logo} 1x, ${Logo2x} 2x`" 
+                                    sizes="(max-width: 600px) 100vw, 50vw" 
+                                    alt="Logo de SEKAI TECH" 
+                                    class="rounded-md w-full h-full"
+                                >
                             </Link>
                             <h1 class="hidden-h1">SEKAI TECH - Tienda de Tecnología en Huánuco</h1>
                         </div>
@@ -199,15 +205,22 @@ onMounted(async () => {
                                 class="absolute z-10 w-auto bg-white rounded-md shadow-lg mt-1 top-full overflow-y-scroll"
                                 @mouseleave="hidePopupOnMouseLeave">
                                 <ul>
-                                    <Link :href="route('productid', { slug: product.slug })"
-                                        v-for="product in filteredProducts" :key="product.id"
-                                        class="flex items-center gap-1 px-4 py-2 cursor-pointer hover:bg-gray-100">
-                                    <img :src="getRouteForProduct(product.id)" :alt="`Imagen de ${product.name}`"
-                                        class="h-12 w-12 rounded object-cover" />
-                                    <p class="flex flex-col text-sm text-gray-800">
-                                        <span>{{ product.name }}</span>
-                                        <span class="font-bold">Stock: {{ product.stock }}</span>
-                                    </p>
+                                    <Link 
+                                        v-for="product in filteredProducts" 
+                                        :key="product.id" 
+                                        :href="route('productid', { slug: product.slug })"
+                                        class="flex items-center gap-1 px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                    >
+                                        <img 
+                                            :src="getRouteForProduct(product.id)" 
+                                            :alt="`Imagen de ${product.name}`" 
+                                            class="h-12 w-12 rounded object-cover" 
+                                            loading="lazy"
+                                        >
+                                        <p class="flex flex-col text-sm text-gray-800">
+                                            <span>{{ product.name }}</span>
+                                            <span class="font-bold">Stock: {{ product.stock }}</span>
+                                        </p>
                                     </Link>
                                 </ul>
                             </div>

@@ -317,16 +317,42 @@ const closePopup = () => {
     obtenerCantidadPedidos();
 };
 
-// Función para actualizar el título de la página
-const updatePageTitle = () => {
+// Función para actualizar el título, la descripción y las keywords
+const updatePageMeta = () => {
     setTimeout(() => {
-        const newTitle = `${nameproduct.value} - ${partNumber.value} | SEKAI TECH`;
+        const page = usePage();
+        const newTitle = page.props.title || `${nameproduct.value} - ${partNumber.value} | SEKAI TECH`;
         document.title = newTitle;
-        console.log("Título actualizado:", newTitle);
-    }, 500); // Pequeño retraso para asegurarnos de que no se sobrescriba
+
+        // Actualizar la descripción meta
+        const metaDescription = document.querySelector('meta[name="description"]');
+        const newDescription = `Compra ${nameproduct.value} con número de parte ${partNumber.value} en SEKAI TECH. Calidad garantizada.`;
+        if (metaDescription) {
+            metaDescription.setAttribute("content", newDescription);
+        } else {
+            const meta = document.createElement('meta');
+            meta.name = "description";
+            meta.content = newDescription;
+            document.head.appendChild(meta);
+        }
+
+        // Actualizar las keywords meta
+        const metaKeywords = document.querySelector('meta[name="keywords"]');
+        const newKeywords = `${nameproduct.value}, ${partNumber.value}, comprar ${nameproduct.value}, SEKAI TECH, tecnología, repuestos electrónicos`;
+        if (metaKeywords) {
+            metaKeywords.setAttribute("content", newKeywords);
+        } else {
+            const meta = document.createElement('meta');
+            meta.name = "keywords";
+            meta.content = newKeywords;
+            document.head.appendChild(meta);
+        }
+
+        console.log("Meta actualizados:", { newTitle, newDescription, newKeywords });
+    }, 500); // Pequeño retraso para evitar sobrescritura
 };
 
-// Llamar a updatePageTitle cuando el componente se monta
+// Llamar a updatePageMeta cuando el componente se monta
 onMounted(() => {
     products.value = props.products;
     maxQuantity.value = stock.value;
@@ -335,9 +361,29 @@ onMounted(() => {
     routeimage.value = props.images && props.images.length > 0 ? `/storage/${props.images[0].file_path}/${props.images[0].file}` : '';
     obtenerCantidadPedidos();
     cargarImagenesBrands();
-    updatePageTitle(); // Actualizar el título de la página
+    updatePageMeta(); // Actualizar el título, la descripción y las keywords
 });
 
+// Observar cambios en el nombre del producto o el número de parte
+watch([nameproduct, partNumber], () => {
+    updatePageMeta(); // Actualizar cuando haya cambios
+});
+
+// JSON-LD optimizado
+const productJsonLd = computed(() => JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": nameproduct.value,
+    "sku": partNumber.value,
+    "description": prodDescription.value,
+    "brand": { "@type": "Brand", "name": "SEKAI TECH" },
+    "offers": {
+        "@type": "Offer",
+        "price": pricedolar.value,
+        "priceCurrency": "USD",
+        "availability": stock.value > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+    }
+}));
 </script>
 
 <template>
